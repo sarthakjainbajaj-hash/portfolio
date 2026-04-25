@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-slate-100 text-slate-900 antialiased transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100;
+}
+
+@layer components {
+  .section-wrap {
+    @apply mx-auto w-full max-w-6xl px-5 py-20 md:px-8;
+  }
+
+  .section-title {
+    @apply text-3xl font-bold tracking-tight sm:text-4xl font-heading;
+  }
+
+  .glass-card {
+    @apply border border-slate-200/80 bg-white/90 backdrop-blur-sm dark:border-gold-500/50 dark:bg-slate-900/80;
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: "Cinzel", serif;
+  }
+}
+
+@keyframes fire {
+  0% { background: linear-gradient(45deg, #ff4500, #ff6600, #ff8800); }
+  25% { background: linear-gradient(45deg, #ff6600, #ff8800, #ffa500); }
+  50% { background: linear-gradient(45deg, #ff8800, #ffa500, #ffcc00); }
+  75% { background: linear-gradient(45deg, #ffa500, #ffcc00, #ff4500); }
+  100% { background: linear-gradient(45deg, #ffcc00, #ff4500, #ff6600); }
+}
+
+.fire-bg {
+  background-image: url('/fire-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  animation: fire 3s ease-in-out infinite;
+}
+
+@keyframes badgeMove {
+  0% { left: 1rem; top: 1rem; }
+  25% { left: calc(100% - 6rem); top: 1rem; }
+  50% { left: calc(100% - 6rem); top: calc(100% - 2rem); }
+  75% { left: 1rem; top: calc(100% - 2rem); }
+  100% { left: 1rem; top: 1rem; }
+}
+
+.animate-badgeMove {
+  animation: badgeMove 8s linear infinite;
+}
