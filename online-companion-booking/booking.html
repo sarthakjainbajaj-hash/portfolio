@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Boyfriend/Girlfriend Booking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <div>
+          <p class="eyebrow">Companion Marketplace</p>
+          <h1>Book or List a Boyfriend/Girlfriend</h1>
+        </div>
+        <div class="top-actions">
+          <p id="authStatus" class="muted small">Not logged in</p>
+          <a class="btn" href="./index.html">Login / Sign Up</a>
+          <button id="logoutBtn" class="chip hidden">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container page-stack"> 
+      <section class="panel">
+        <h2>Welcome to Companion Booking</h2>
+        <p class="muted">
+          Login or sign up on the dedicated page before booking or listing profiles.
+        </p>
+      </section>
+
+      <section class="layout">
+        <section>
+          <div class="filters">
+            <button class="chip active" data-filter="All">All</button>
+            <button class="chip" data-filter="Boyfriend">Boyfriend</button>
+            <button class="chip" data-filter="Girlfriend">Girlfriend</button>
+          </div>
+          <div id="profilesGrid" class="profiles-grid"></div>
+        </section>
+
+        <aside class="panel">
+          <h2>Complete Booking</h2>
+          <p class="muted">Login required for booking and listing.</p>
+
+          <div id="selectedSummary" class="summary-box"></div>
+
+          <form id="bookingForm" class="form">
+            <label>
+              Booking Type
+              <select id="bookingType" class="input">
+                <option value="Book a Boyfriend">Book a Boyfriend</option>
+                <option value="Book a Girlfriend">Book a Girlfriend</option>
+              </select>
+            </label>
+            <div class="two-col">
+              <label>
+                Date
+                <input class="input" type="date" name="date" required />
+              </label>
+              <label>
+                Hours
+                <input class="input" id="hoursInput" type="number" min="1" max="12" value="2" required />
+              </label>
+            </div>
+            <label>
+              Note
+              <textarea class="input" name="note" rows="4"></textarea>
+            </label>
+            <label>
+              Payment Method
+              <select class="input" name="paymentMethod">
+                <option value="cash">Cash</option>
+                <option value="upi">UPI</option>
+                <option value="card">Card</option>
+              </select>
+            </label>
+            <div class="total-box">
+              <p id="typeLine">Book a Boyfriend</p>
+              <p id="totalLine">Estimated Total: $0</p>
+            </div>
+            <button class="btn" type="submit">Confirm Booking</button>
+          </form>
+          <p id="successMessage" class="success hidden"></p>
+        </aside>
+      </section>
+
+      <section class="auth-grid">
+        <article class="panel">
+          <h2>List Yourself as Companion</h2>
+          <form id="profileForm" class="form">
+            <div class="two-col">
+              <label>Name<input class="input" name="name" required /></label>
+              <label>
+                Role
+                <select class="input" name="role">
+                  <option value="Boyfriend">Boyfriend</option>
+                  <option value="Girlfriend">Girlfriend</option>
+                </select>
+              </label>
+            </div>
+            <div class="two-col">
+              <label>Age<input class="input" name="age" type="number" min="18" required /></label>
+              <label>City<input class="input" name="city" required /></label>
+            </div>
+            <div class="two-col">
+              <label>Language<input class="input" name="language" /></label>
+              <label>Price/hour ($)<input class="input" name="pricePerHour" type="number" min="1" required /></label>
+            </div>
+            <label>Profile Image<input class="input" name="image" type="file" accept="image/*" /></label>
+            <label>Vibe<input class="input" name="vibe" /></label>
+            <label>Interests (comma separated)<input class="input" name="interests" /></label>
+            <label>About<textarea class="input" name="about" rows="3"></textarea></label>
+            <button class="btn" type="submit">Create Profile</button>
+          </form>
+        </article>
+
+        <article class="panel">
+          <h2>My Bookings</h2>
+          <div id="bookingsList" class="list-box muted">Login to see booking history.</div>
+        </article>
+      </section>
+
+      <section id="adminSection" class="auth-grid hidden">
+        <article class="panel">
+          <h2>Admin: Pending Profiles</h2>
+          <div id="adminProfilesList" class="list-box muted">No pending profiles.</div>
+        </article>
+        <article class="panel">
+          <h2>Admin: Manage Bookings</h2>
+          <div id="adminBookingsList" class="list-box muted">No bookings found.</div>
+        </article>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,215 @@
+#login{
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+    width: 300px;
+    height: 350px;
+    text-align: center;
+    margin: 20px;
+    padding: 10px;
+    margin-left: 0%;
+    background-color: white;
+    margin-right: 0%;
+}
+a{
+    text-decoration: none;
+    color: black;
+
+
+}
+h1{
+    text-align: center;
+    color: black;
+}
+a{
+    font-style: italic;
+    color: blue;
+}
+#password{
+    margin-bottom: 0%;
+}
+h2{
+    text-align: center;
+}
+#signup{
+    margin-left: 450px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    height: 350px;
+    width: 300px;
+    text-align: center;
+    background-color: white;
+    margin-left: 0%;
+     margin: 20px;
+    padding: 10px;
+}
+body{
+    background-color: black;
+    color-interpolation-filters: var();0
+}
+#submit{
+    background-color: blue;
+    color: white;
+    font-size: medium;
+    font-weight: bold;  
+    border-radius: 50px;
+}
+#loginbutton{
+    background-color: blue;
+    color: white;
+    font-size: medium;
+    font-weight: bold;  
+  height: 26px;
+  width: 100px;
+    border-radius: 50px;
+}
+#accc{
+    color:wheat;
+}
+#forget{
+    font-size: small;
+}
+#header{
+    text-align: center;
+    font-size: xx-large;
+    color: whitesmoke;
+    background-color: #fffdf1;
+}
+.myclass{ 
+    border-radius: 30px;
+    align-items: center;
+}
+#signupbutton{
+    background-color: blue;
+    color: white;
+    font-size: medium;
+    font-weight: bold;  
+    border-radius: 5px;
+}
+#bigdiv {
+    display: flex;            /* Boxes ko side-by-side lane ke liye */
+    justify-content: center;  /* Dono boxes ko screen ke beech mein lane ke liye */
+    align-items: flex-start;  /* Dono ko upar se ek barabar level par rakhne ke liye */
+    gap: 40px;               /* Dono boxes ke beech ka gap */
+    padding: 50px;           /* Screen ke kinaro se thodi jagah */
+}
+
+
+
+
+
+
+/* ye jo neche bala css code h submit bale page ka */
+.summit{
+    border: 2px ;
+    background-color: #7ae2cf;
+ 
+ height: 670px;
+ width: 100%;
+ /* padding-left: 25px;
+ padding-right: 25px;
+ padding-bottom: 25px; */
+ 
+ text-align: center;
+ align-items: center;
+}
+.body{
+    background-color: #36C2CE;
+    text-align: center;
+}
+.form{
+    background-color: white;
+    border-radius: 10px;
+    border-color: solid black;
+    border-width: 2px;
+    height: 600x;
+    width: 300px;
+    text-align: center;
+    margin-left: 600px;
+    margin-right: auto;
+    margin-top: 30px;
+    padding: 10px;
+}
+#input{
+    margin: 10px;
+    padding: 5px;
+    border-radius: 20px;
+    border: 2px solid black;
+    text-align: center;
+}
+#button{
+    background-color: blue;
+    color: white;
+    border-radius: 20px;
+    width: 100px;
+    font-size: medium;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: #ffce99;
+    text-emphasis-style: inherit;
+    height: 26px;
+    
+}
+
+
+
+
+
+/* ye bala code thankyou bale ke liye */                
+#thank{
+    text-align: center;
+    color: black;
+    text-align: center;
+    font-size: xx-large;
+}
+body{
+    background-color: #ffce99;
+    color-interpolation-filters: var();
+    text-align: center;
+}
+.ticket{
+    border: 2px solid black;
+    background-color: white;
+    height: 600px;
+    width: 400px;
+    /* margin-left: 600px; */
+    margin-top: 50px;
+    padding: 10px;
+    text-align: center;
+    background-color:lightgray ;
+    
+}
+#img{
+    margin-right: auto;
+    border-top: 2px dotted black;
+    border-bottom: 2px dotted black;
+    margin-left: 0%;
+    margin-bottom: 0%;
+}
+#bar{
+    background-color: lightgray;
+    font-size: xx-small;
+}
+#p{
+    font-size: small;
+    border-top: 2px dotted black;
+}
+#pp{
+    font-size: small;
+    border-bottom: 2px dotted black;
+}
+.ticket .meta { display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; }
+.ticket img.icon {      
+  width:50px;
+  height:50px;
+  object-fit:cover;
+  border-top:2px dotted #000;
+  border-bottom:2px dotted #000;
+  padding:4px;
+  border-radius:6px;
+  /* margin-left: 700px; */
+}
+.ticket #bruh {
+    margin-left: 350px;
+}

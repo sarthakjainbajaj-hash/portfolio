@@ -1,5 +1,3 @@
-import { FaBriefcase } from "react-icons/fa";
-
 function Experience() {
   const experiences = [
     {
@@ -18,6 +16,7 @@ function Experience() {
 
   return (
     <section id="experience" className="section-wrap animate-fadeInUp">
+      <p className="section-badge">War Council</p>
       <h3 className="section-title">Experience</h3>
       <div className="mt-10 space-y-8">
         {experiences.map((exp, index) => (

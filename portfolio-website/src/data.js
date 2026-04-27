@@ -4,6 +4,7 @@ export const navLinks = [
   { id: "experience", label: "Experience" },
   { id: "projects", label: "Projects" },
   { id: "skills", label: "Skills" },
+  { id: "certifications", label: "Certifications" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -51,4 +52,53 @@ export const skills = [
   "MATLAB",
   "Git",
   "GitHub",
+];
+
+export const certifications = [
+  {
+    title: "Software Engineering Job Simulation",
+    issuer: "JPMorgan Chase & Co. (Forage)",
+    date: "Jan 21, 2026",
+    category: "Software Engineering",
+    highlights: ["Kafka Integration", "H2 Integration", "REST API Integration"],
+  },
+  {
+    title: "Coding Development Certification",
+    issuer: "Deloitte",
+    date: "Completed",
+    category: "Software Development",
+    highlights: ["Development practices", "Code quality", "Problem solving"],
+  },
+  {
+    title: "Data Analysis and Forensic Technology Certification",
+    issuer: "Deloitte",
+    date: "Completed",
+    category: "Data & Forensics",
+    highlights: ["Data analysis", "Digital forensics basics", "Insight reporting"],
+  },
+  {
+    title: "Deadlift Tournament Certificate",
+    issuer: "Tournament Organizer",
+    date: "Achieved",
+    category: "Sports",
+    highlights: ["Strength performance", "Competitive participation"],
+  },
+  {
+    title: "Basketball 1st Position",
+    issuer: "Tournament Organizer",
+    date: "Achieved",
+    category: "Sports",
+    highlights: ["First place finish", "Teamwork", "Leadership on court"],
+  },
+  {
+    title: "AI Tools and ChatGPT Workshop",
+    issuer: "be10x",
+    date: "Mar 3, 2026",
+    category: "Workshop",
+    highlights: [
+      "Create presentations using AI in under 5 minutes",
+      "Analyze data using AI in under 30 minutes",
+      "Code and debug using AI in under 10 minutes",
+    ],
+  },
 ];

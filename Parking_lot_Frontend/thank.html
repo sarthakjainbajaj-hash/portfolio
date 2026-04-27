@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>       
+    <link rel="stylesheet" href="styles.css">
+    <style>
+    /* minimal safe defaults */
+    body { font-family: Arial, sans-serif; line-height:1.5; padding:2rem; background:#f6f7fb; }
+    #thank { text-align:center; margin-bottom:1rem;}
+    .ticket { max-width:480px; margin:0 auto; padding:1rem; border:1px solid #ddd; border-radius:8px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+    .ticket .meta { display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;}
+    .ticket img.icon { width:50px; height:50px; object-fit:cover; }
+    .ticket p { margin:0 0 .75rem 0; }
+    #barcode { display:block; margin:1rem auto 0; width:200px; height:80px; object-fit:contain; }
+    #printBtn { display:inline-block; margin-top:1rem; padding:.5rem 1rem; border:none; background:#0078d4; color:#fff; border-radius:4px; cursor:pointer;}
+    @media print {      
+      #printBtn { display:none; }
+      body { padding:0; }
+      .ticket { box-shadow:none; border:none; }
+    }   
+    </style>
+</head>
+<body>
+<div id="thank"> <h1>Thank you for using our parking lot management system!</h1></div>
+   <div class="ticket"> 
+    <p>Your parking ticket has been generated successfully.
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwOIUSceZhRo-Y1RBaOc9lDksAvPGSHe4EYw&s" height="25" width="25" alt="ticket icon" class="icon" id="bruh">
+      <div id="img"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-oU0Dubdtl4o8R26ovM_6weA2h3i_H8ZutA&s" alt="ticket" height="50" width="50">
+
+      <p id="p">Please keep this ticket safe as it contains important information about your parking session.</p>
+      <p id="pp">We appreciate your business and look forward to serving you again in the future!</p><br><br/><br>
+     
+     <div id="img">
+         
+      <img src="https://img.freepik.com/free-psd/barcode-illustration-isolated_23-2150584086.jpg?semt=ais_hybrid&w=740&q=80" alt="barcode" height="80" width="200">
+   <br>
+   THANKYOU AND LUCKY ROAD
+    </div>
+</body>
+</html>

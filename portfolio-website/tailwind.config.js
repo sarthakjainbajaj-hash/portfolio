@@ -6,14 +6,15 @@ export default {
     extend: {
       colors: {
         brand: {
-          400: "#e53e3e",
-          500: "#c53030",
-          600: "#9b2c2c",
+          400: "#b91c1c",
+          500: "#991b1b",
+          600: "#7f1d1d",
+          700: "#651111",
         },
         gold: {
-          400: "#f6e05e",
+          400: "#facc15",
           500: "#d4af37",
-          600: "#b7950b",
+          600: "#a16207",
         },
       },
       fontFamily: {
@@ -36,7 +37,7 @@ export default {
       },
       boxShadow: {
         premium:
-          "0 10px 30px -12px rgba(15, 23, 42, 0.25), 0 8px 10px -8px rgba(99, 102, 241, 0.35)",
+          "0 12px 34px -16px rgba(2, 6, 23, 0.75), 0 6px 20px -10px rgba(153, 27, 27, 0.45)",
       },
     },
   },

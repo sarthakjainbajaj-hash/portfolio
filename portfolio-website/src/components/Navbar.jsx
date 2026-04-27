@@ -3,14 +3,14 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import { navLinks } from "../data";
 import ThemeToggle from "./ThemeToggle";
 
-function Navbar({ isDark, onToggle }) {
+function Navbar({ isDark, onToggle, houseTheme, onHouseChange }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/80 backdrop-blur-xl dark:border-gold-500/50 dark:bg-slate-950/80">
+    <header className="sticky top-0 z-50 border-b border-brand-700/30 bg-slate-950/90 backdrop-blur-xl dark:border-gold-500/50 dark:bg-slate-950/90">
       <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-4 md:px-8">
-        <a href="#hero" className="text-lg font-bold tracking-tight">
-          Sarthak Jain Bajaj
+        <a href="#hero" className="text-lg font-bold tracking-tight text-gold-400 font-heading">
+          House Bajaj
         </a>
 
         <div className="hidden items-center gap-6 md:flex">
@@ -18,11 +18,21 @@ function Navbar({ isDark, onToggle }) {
             <a
               key={link.id}
               href={`#${link.id}`}
-              className="text-sm font-medium text-slate-600 transition-colors duration-300 hover:text-gold-600 dark:text-slate-300"
+              className="text-sm font-medium text-slate-300 transition-colors duration-300 hover:text-gold-400"
             >
               {link.label}
             </a>
           ))}
+          <select
+            value={houseTheme}
+            onChange={(event) => onHouseChange(event.target.value)}
+            aria-label="Select house theme"
+            className="rounded-lg border border-brand-700/70 bg-slate-900 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gold-300"
+          >
+            <option value="stark">Stark</option>
+            <option value="lannister">Lannister</option>
+            <option value="targaryen">Targaryen</option>
+          </select>
           <ThemeToggle isDark={isDark} onToggle={onToggle} />
         </div>
 
@@ -31,25 +41,35 @@ function Navbar({ isDark, onToggle }) {
           aria-label="Toggle navigation menu"
           aria-expanded={isOpen}
           aria-controls="mobile-menu"
-          className="md:hidden rounded-full border border-slate-300 bg-white p-2 text-slate-700 shadow-sm transition duration-300 hover:scale-105 hover:border-gold-500 hover:text-gold-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+          className="md:hidden rounded-full border border-brand-700/70 bg-slate-900 p-2 text-gold-300 shadow-sm transition duration-300 hover:scale-105 hover:border-gold-500 hover:text-gold-400"
         >
           {isOpen ? <FaTimes size={16} /> : <FaBars size={16} />}
         </button>
       </nav>
 
       {isOpen && (
-        <div id="mobile-menu" className="border-t border-slate-200/70 bg-white/90 px-5 py-4 backdrop-blur-xl dark:border-gold-500/50 dark:bg-slate-950/90 md:hidden">
+        <div id="mobile-menu" className="border-t border-brand-700/40 bg-slate-950/95 px-5 py-4 backdrop-blur-xl dark:border-gold-500/50 dark:bg-slate-950/95 md:hidden">
           <div className="flex flex-col gap-3">
             {navLinks.map((link) => (
               <a
                 key={link.id}
                 href={`#${link.id}`}
                 onClick={() => setIsOpen(false)}
-                className="rounded-2xl px-4 py-3 text-sm font-medium text-slate-700 transition duration-200 hover:bg-gold-100 dark:text-slate-200 dark:hover:bg-slate-800"
+                className="rounded-2xl px-4 py-3 text-sm font-medium text-slate-200 transition duration-200 hover:bg-brand-900/60 hover:text-gold-300"
               >
                 {link.label}
               </a>
             ))}
+            <select
+              value={houseTheme}
+              onChange={(event) => onHouseChange(event.target.value)}
+              aria-label="Select house theme"
+              className="rounded-lg border border-brand-700/70 bg-slate-900 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gold-300"
+            >
+              <option value="stark">Stark</option>
+              <option value="lannister">Lannister</option>
+              <option value="targaryen">Targaryen</option>
+            </select>
             <ThemeToggle isDark={isDark} onToggle={onToggle} />
           </div>
         </div>

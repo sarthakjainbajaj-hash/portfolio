@@ -1,0 +1,94 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "sarthak",
+      "email": "sarthakjainbajaj@gmail.com",
+      "passwordHash": "$2a$10$2oarFz5WIUoWhVHhKszJ0u/0fL3Nm8EWL9JWRg6H25OhzFJXeJ22."
+    }
+  ],
+  "profiles": [
+    {
+      "id": 1,
+      "name": "Aarav",
+      "role": "Boyfriend",
+      "age": 24,
+      "city": "Mumbai",
+      "vibe": "Funny and caring",
+      "language": "Hindi, English",
+      "pricePerHour": 5,
+      "about": "Coffee dates, movies, and sweet daily check-ins.",
+      "interests": [
+        "Movies",
+        "Fitness",
+        "Gaming"
+      ],
+      "ownerUserId": null
+    },
+    {
+      "id": 2,
+      "name": "Meera",
+      "role": "Girlfriend",
+      "age": 22,
+      "city": "Delhi",
+      "vibe": "Soft and thoughtful",
+      "language": "Hindi, English",
+      "pricePerHour": 6,
+      "about": "Warm chats, emotional support, and romantic vibes.",
+      "interests": [
+        "Poetry",
+        "Travel",
+        "Music"
+      ],
+      "ownerUserId": null
+    },
+    {
+      "id": 3,
+      "name": "Kabir",
+      "role": "Boyfriend",
+      "age": 26,
+      "city": "Pune",
+      "vibe": "Confident and playful",
+      "language": "English, Marathi",
+      "pricePerHour": 5,
+      "about": "Flirty chats, date planning, and high-energy calls.",
+      "interests": [
+        "Cooking",
+        "Cars",
+        "Standup"
+      ],
+      "ownerUserId": null
+    },
+    {
+      "id": 4,
+      "name": "Riya",
+      "role": "Girlfriend",
+      "age": 23,
+      "city": "Bengaluru",
+      "vibe": "Chill and supportive",
+      "language": "English, Kannada",
+      "pricePerHour": 6,
+      "about": "Late-night talks, gaming sessions, and cute moments.",
+      "interests": [
+        "K-drama",
+        "Anime",
+        "Design"
+      ],
+      "ownerUserId": null
+    }
+  ],
+  "bookings": [
+    {
+      "id": 1,
+      "userId": 1,
+      "profileId": 1,
+      "profileName": "Aarav",
+      "bookingType": "Book a Boyfriend",
+      "date": "2006-04-02",
+      "hours": 6,
+      "total": 30,
+      "note": "i love u ",
+      "createdAt": "2026-04-23T20:17:40.668Z"
+    }
+  ]
+}

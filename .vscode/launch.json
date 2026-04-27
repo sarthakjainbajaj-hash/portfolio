@@ -1,0 +1,42 @@
+#include <iostream>
+#include <string>
+using namespace std;
+class student{
+    private:
+    double fees;
+   public:
+    string name;
+    string section;
+    int rollno;
+    
+    void changeSectiion(string newsection){
+        section = newsection;
+    }
+    void setFees(double newfees){
+    fees=newfees;
+    }
+    double getfees(){
+    return fees;
+    }
+    
+    
+    
+};
+
+    int main()
+         { 
+             student s1;
+            s1.name="sarthak";
+             s1.section="A";
+             s1.rollno=63;
+             s1.setFees(45000);
+             cout<<s1.name<<endl;
+             cout<<s1.getfees()<<endl;
+    return 0;
+}{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": []
+}

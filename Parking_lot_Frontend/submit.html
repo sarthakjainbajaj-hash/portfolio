@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="body">
+    <h1>Welcome to Parking Lot</h1>
+    <div class="summit">
+         <form action="/action_page.php" class="form">
+    <h2>please enter the details of your vehicle:</h2>
+   
+        <label for="vnumber">vehicle number:</label><br/>
+        <input type="text" id="enter" name="vnumber" placeholder="Enter vehicle number"><br/><br/>
+        <label for="vtype">vehicle type:</label><br/>
+        <select id="vtype" name="vtype">
+            <option value="bike">bike</option>
+            <option value="car">car</option>
+        </select><br/><br/>
+       please enter your parking duration in hours:<br/>
+        <br/>
+        <input type="number" id="enter" name="duration" placeholder="Enter duration in hours"><br/><br/>
+      
+
+        your total parking fees is:
+        <input type="text" id="input" name="fees" placeholder="total fees"><br/><br/>
+         please scan the QR code to proceed:    
+        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" alt="QR code" height="150" width="150">
+       <br/>
+       <button type="submit" id="button"> 
+       <a href="http://127.0.0.1:5500/Parking_lot_Frontend/thank.html" id="button">submit</a><br><br/>
+           </button>
+          </form></div> 
+    </body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login / Sign Up | Online Companion Booking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <div>
+          <p class="eyebrow">Companion Marketplace</p>
+          <h1>Login or Create an Account</h1>
+        </div>
+        <div class="topbar-right">
+          <div class="top-actions">
+            <p id="authStatus" class="muted small">Not logged in</p>
+            <button id="logoutBtn" class="chip hidden">Logout</button>
+          </div>
+          <div class="topbar-auth-card">
+            <div class="topbar-auth-grid">
+              <article class="panel topbar-auth-panel">
+                <h2>Create Account</h2>
+                <form id="signupForm" class="form">
+                  <label>
+                    Name
+                    <input class="input" name="name" required />
+                  </label>
+                  <label>
+                    Email
+                    <input class="input" type="email" name="email" required />
+                  </label>
+                  <label>
+                    Password
+                    <input class="input" type="password" name="password" required minlength="6" />
+                  </label>
+                  <label>
+                    Confirm Password
+                    <input class="input" type="password" name="confirmPassword" required minlength="6" />
+                  </label>
+                  <label class="terms-label">
+                    <input type="checkbox" name="termsAccepted" required />
+                    I agree to the terms and conditions.
+                  </label>
+                  <button class="btn" type="submit">Sign Up</button>
+                </form>
+              </article>
+
+              <article class="panel topbar-auth-panel">
+                <h2>Login</h2>
+                <form id="loginForm" class="form">
+                  <label>
+                    Email
+                    <input class="input" type="email" name="email" required />
+                  </label>
+                  <label>
+                    Password
+                    <input class="input" type="password" name="password" required />
+                  </label>
+                  <button class="btn" type="submit">Login</button>
+                </form>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container page-stack">
+      <section class="panel">
+        <h2>Terms & Conditions</h2>
+        <p class="muted">
+          By signing up you agree to use this service responsibly and only for its intended purpose.
+          All bookings are between users and subject to approval by the admin.
+        </p>
+        <p class="muted">
+          Please do not share offensive, abusive, or harmful content while using this platform.
+        </p>
+      </section>
+
+      <p id="successMessage" class="success hidden"></p>
+
+      <section class="panel">
+        <p>
+          Already have an account? Use the login form. New users must accept terms and will be
+          redirected to the main booking page after login.
+        </p>
+        <a class="btn" href="./index.html">Back to Home</a>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
