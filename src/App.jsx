@@ -8,6 +8,7 @@ import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import Projects from "./components/Projects";
 import Skills from "./components/Skills";
+import ThreeBackground from "./components/ThreeBackground";
 
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -48,6 +49,7 @@ function App() {
       <div className="pointer-events-none absolute -left-24 top-24 h-64 w-64 rounded-full bg-brand-500/30 blur-3xl dark:bg-brand-500/35" />
       <div className="pointer-events-none absolute right-0 top-[28rem] h-72 w-72 rounded-full bg-gold-500/25 blur-3xl dark:bg-gold-500/20" />
       <div className="pointer-events-none absolute inset-0 fire-bg opacity-10 dark:opacity-20" />
+      <ThreeBackground houseTheme={houseTheme} isDark={isDark} />
       <Navbar
         isDark={isDark}
         onToggle={toggleTheme}
@@ -55,7 +57,7 @@ function App() {
         onHouseChange={changeHouseTheme}
       />
       <main className="relative z-10">
-        <Hero />
+        <Hero houseTheme={houseTheme} />
         <About />
         <Experience />
         <Projects />

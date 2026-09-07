@@ -1,10 +1,12 @@
 import { FaCode, FaExternalLinkAlt } from "react-icons/fa";
+import TiltCard from "./TiltCard";
 
 function ProjectCard({ project }) {
   const hasLinks = project.liveUrl || project.githubUrl;
 
   return (
-    <article className="parchment-card group rounded-2xl p-7 transition duration-300 hover:-translate-y-1.5 hover:shadow-premium">
+    <TiltCard maxTilt={10} scale={1.02} className="h-full">
+      <article className="parchment-card group flex h-full flex-col justify-between rounded-2xl p-7 transition-shadow duration-300 hover:shadow-premium">
       <h4 className="text-xl font-semibold text-slate-900">{project.title}</h4>
       <p className="mt-4 text-sm leading-relaxed text-amber-900/80">
         {project.description}
@@ -51,6 +53,7 @@ function ProjectCard({ project }) {
         )}
       </div>
     </article>
+    </TiltCard>
   );
 }
 

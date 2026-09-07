@@ -1,4 +1,5 @@
 import { certifications } from "../data";
+import TiltCard from "./TiltCard";
 
 function Certifications() {
   return (
@@ -12,10 +13,10 @@ function Certifications() {
 
       <div className="mt-10 grid gap-6 md:grid-cols-2">
         {certifications.map((cert) => (
-          <article
-            key={`${cert.issuer}-${cert.title}`}
-            className="platinum-card group rounded-2xl p-6 transition duration-300 hover:-translate-y-1 hover:shadow-premium"
-          >
+          <TiltCard key={`${cert.issuer}-${cert.title}`} maxTilt={8} scale={1.02} className="h-full">
+            <article
+              className="platinum-card group h-full rounded-2xl p-6 transition-shadow duration-300 hover:shadow-premium"
+            >
             <div className="flex items-start justify-between gap-3">
               <h4 className="text-lg font-semibold text-slate-900">{cert.title}</h4>
               <span className="rounded-full border border-slate-500/40 bg-slate-100/80 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-700">
@@ -38,6 +39,7 @@ function Certifications() {
               ))}
             </ul>
           </article>
+          </TiltCard>
         ))}
       </div>
     </section>
