@@ -10,6 +10,14 @@ export const navLinks = [
 
 export const projects = [
   {
+    title: "SolveSphere",
+    description:
+      "AI-powered collaborative platform crowdsourcing societal challenges and facilitating collaborative problem-solving across universities, students, and industry partnerships (SIH-26043).",
+    techStack: ["React.js", "Tailwind CSS", "Vite", "AI Integration"],
+    liveUrl: "https://solvesphere-three.vercel.app/",
+    githubUrl: "https://github.com/sarthakjainbajaj-hash/SolveSphere-SIH26043",
+  },
+  {
     title: "Parking Lot Management System",
     description:
       "Automated parking slot management system with a scalable cloud-ready deployment approach.",
