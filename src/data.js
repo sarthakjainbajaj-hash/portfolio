@@ -39,7 +39,7 @@ export const projects = [
       "Modern responsive portfolio with dark mode, smooth scrolling, and reusable React components.",
     techStack: ["React.js", "Tailwind CSS", "Vite"],
     liveUrl: "",
-    githubUrl: "",
+    githubUrl: "https://github.com/sarthakjainbajaj-hash/portfolio",
   },
 ];
 
