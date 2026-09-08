@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-function VirtualJoystick({ onMove, onAction }) {
+function VirtualJoystick({ onMove, onAction, onAttack }) {
   const stickRef = useRef(null);
   const baseRef = useRef(null);
   const touchIdRef = useRef(null);
@@ -44,8 +44,6 @@ function VirtualJoystick({ onMove, onAction }) {
           const stickY = Math.sin(angle) * clampedDist;
 
           stick.style.transform = `translate(${stickX}px, ${stickY}px)`;
-
-          // Normalize -1 to 1
           onMove(stickX / baseRadius, stickY / baseRadius);
           break;
         }
@@ -78,7 +76,7 @@ function VirtualJoystick({ onMove, onAction }) {
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-6 z-40 flex items-end justify-between px-6 md:hidden">
-      {/* Virtual D-Pad / Joystick */}
+      {/* Virtual D-Pad */}
       <div
         ref={baseRef}
         className="pointer-events-auto relative flex h-28 w-28 items-center justify-center rounded-full border-2 border-brand-500/40 bg-slate-950/70 shadow-2xl backdrop-blur-md"
@@ -89,14 +87,28 @@ function VirtualJoystick({ onMove, onAction }) {
         />
       </div>
 
-      {/* Action Button */}
-      <button
-        onClick={onAction}
-        aria-label="Interact"
-        className="pointer-events-auto flex h-16 w-16 items-center justify-center rounded-full border-2 border-gold-500 bg-gradient-to-br from-brand-600 to-gold-600 text-sm font-extrabold text-white shadow-2xl active:scale-95"
-      >
-        A
-      </button>
+      {/* Action & Attack Buttons */}
+      <div className="pointer-events-auto flex items-center gap-3">
+        {/* Sword Attack Button */}
+        <button
+          onClick={onAttack}
+          type="button"
+          aria-label="Attack with sword"
+          className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-red-500 bg-gradient-to-br from-red-600 to-amber-600 text-lg font-extrabold text-white shadow-2xl active:scale-90"
+        >
+          ⚔️
+        </button>
+
+        {/* Interact Button */}
+        <button
+          onClick={onAction}
+          type="button"
+          aria-label="Interact"
+          className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-gold-500 bg-gradient-to-br from-brand-600 to-gold-600 text-xs font-extrabold text-white shadow-xl active:scale-90"
+        >
+          [E]
+        </button>
+      </div>
     </div>
   );
 }

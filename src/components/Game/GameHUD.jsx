@@ -5,6 +5,8 @@ import { sound } from "./soundEngine";
 function GameHUD({
   collectedCount = 0,
   totalCollectibles = 5,
+  monstersSlain = 0,
+  totalMonsters = 2,
   onToggleViewMode,
   houseTheme = "stark",
 }) {
@@ -52,10 +54,10 @@ function GameHUD({
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-extrabold tracking-wide text-slate-100 font-heading">
-                  Sarthak Jain Bajaj
+                  Soldier Sarthak
                 </span>
                 <span className="rounded bg-brand-900/90 px-1.5 py-0.2 text-[10px] font-bold text-gold-400">
-                  LVL 20
+                  WARRIOR
                 </span>
               </div>
               <div className="mt-1 flex items-center gap-2">
@@ -66,39 +68,32 @@ function GameHUD({
                     <div className="h-full w-full bg-gradient-to-r from-red-600 to-emerald-500" />
                   </div>
                 </div>
-                {/* Mana */}
-                <div className="flex items-center gap-1">
-                  <span className="text-[10px] font-bold text-sky-400">MP</span>
-                  <div className="h-1.5 w-14 overflow-hidden rounded-full bg-slate-800">
-                    <div className="h-full w-full bg-gradient-to-r from-sky-600 to-brand-400" />
-                  </div>
+                {/* Attack Hint */}
+                <div className="flex items-center gap-1 text-[10px] text-amber-300 font-semibold">
+                  <span>⚔️ [Space/J]</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Quest Tracker */}
-          <div className="pointer-events-auto hidden md:flex items-center gap-3 rounded-2xl border border-brand-700/50 bg-slate-950/85 px-4 py-2 text-xs shadow-xl backdrop-blur-md">
-            <button
-              type="button"
-              onClick={() => setShowQuestInfo((prev) => !prev)}
-              className="flex items-center gap-2 text-gold-300 hover:text-gold-200 transition"
-            >
-              <FaTrophy className="text-gold-400" />
-              <span>
-                Citadel Runes: <strong className="text-white">{collectedCount}</strong> / {totalCollectibles}
+          {/* Monsters Hunt Status */}
+          <div className="pointer-events-auto hidden sm:flex items-center gap-2.5 rounded-2xl border border-red-500/40 bg-slate-950/85 px-4 py-2 text-xs shadow-xl backdrop-blur-md">
+            <span className="flex items-center gap-1.5 font-bold text-red-400">
+              <span>👾</span> Skill Beasts Slain: <strong className="text-white">{monstersSlain}</strong> / {totalMonsters}
+            </span>
+            {monstersSlain >= totalMonsters ? (
+              <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+                ✓ Skills Unlocked!
               </span>
-            </button>
-            {collectedCount === totalCollectibles && (
-              <span className="animate-pulse rounded bg-gold-500/20 px-2 py-0.5 text-[10px] font-bold text-gold-300">
-                ★ Master Unlocked!
+            ) : (
+              <span className="rounded bg-red-500/20 px-2 py-0.5 text-[10px] font-bold text-red-300 animate-pulse">
+                ⚔️ Fight 2 Beasts!
               </span>
             )}
           </div>
 
           {/* Right Action Tools */}
           <div className="pointer-events-auto flex items-center gap-2">
-            {/* Audio Toggle */}
             <button
               onClick={toggleAudio}
               aria-label="Toggle Sound"
@@ -107,7 +102,6 @@ function GameHUD({
               {isMuted ? <FaVolumeMute size={14} /> : <FaVolumeUp size={14} />}
             </button>
 
-            {/* Fullscreen Toggle */}
             <button
               onClick={toggleFullscreen}
               aria-label="Toggle Fullscreen"
@@ -116,7 +110,6 @@ function GameHUD({
               {isFullscreen ? <FaCompress size={14} /> : <FaExpand size={14} />}
             </button>
 
-            {/* Switch to Classic Website Mode */}
             <button
               onClick={onToggleViewMode}
               type="button"
@@ -130,8 +123,8 @@ function GameHUD({
 
         {/* Bottom controls reminder */}
         <div className="pointer-events-none fixed bottom-5 left-1/2 -translate-x-1/2 hidden md:block">
-          <div className="rounded-full border border-slate-800 bg-slate-950/80 px-4 py-1.5 text-[11px] font-medium text-slate-400 shadow-md backdrop-blur-md">
-            <span className="text-gold-400 font-bold">WASD / Arrows</span> to move • <span className="text-gold-400 font-bold">[E]</span> or <span className="text-gold-400 font-bold">Space</span> to inspect • <span className="text-gold-400 font-bold">Click</span> to walk
+          <div className="rounded-full border border-slate-800 bg-slate-950/85 px-5 py-1.5 text-[11px] font-medium text-slate-300 shadow-md backdrop-blur-md">
+            <span className="text-red-400 font-bold">⚔️ [Space] or [J]</span> to Slash Sword • <span className="text-gold-400 font-bold">WASD / Arrows</span> to move • <span className="text-gold-400 font-bold">[E]</span> to inspect
           </div>
         </div>
       </header>

@@ -4,6 +4,7 @@ import GameHUD from "./GameHUD";
 import GameDialogModal from "./GameDialogModal";
 import VirtualJoystick from "./VirtualJoystick";
 import { sound } from "./soundEngine";
+import { INTERACTABLES } from "./gameData";
 import { FaExpand, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 
 function GameView({
@@ -17,6 +18,8 @@ function GameView({
 
   const [activeDialogItem, setActiveDialogItem] = useState(null);
   const [isMuted, setIsMuted] = useState(false);
+  const [monstersSlain, setMonstersSlain] = useState(0);
+  const [skillsUnlocked, setSkillsUnlocked] = useState(false);
   const [collectedRunes, setCollectedRunes] = useState(() => {
     try {
       const saved = localStorage.getItem("citadel_runes");
@@ -51,6 +54,19 @@ function GameView({
           return prev;
         });
       },
+      onMonsterKill: (m) => {
+        setMonstersSlain((prev) => prev + 1);
+      },
+      onSkillsUnlocked: () => {
+        setSkillsUnlocked(true);
+        // Pop open Sarthak's skills as victory loot!
+        const skillItem = INTERACTABLES.find((i) => i.id === "skill_altar");
+        if (skillItem) {
+          setTimeout(() => {
+            setActiveDialogItem(skillItem);
+          }, 600);
+        }
+      },
     });
 
     engineRef.current = engine;
@@ -68,7 +84,13 @@ function GameView({
 
   const handleJoystickAction = () => {
     if (engineRef.current) {
-      engineRef.current.triggerAction();
+      engineRef.current.interact();
+    }
+  };
+
+  const handleJoystickAttack = () => {
+    if (engineRef.current) {
+      engineRef.current.attack();
     }
   };
 
@@ -79,11 +101,10 @@ function GameView({
     if (!next) sound.playInteract();
   };
 
-  // 1. EMBEDDED MODE (Displayed directly inside the portfolio page)
+  // 1. EMBEDDED MODE
   if (isEmbedded) {
     return (
       <div className="relative w-full h-[550px] sm:h-[650px] overflow-hidden rounded-[2rem] border-2 border-gold-500/60 bg-slate-950 shadow-2xl select-none">
-        {/* Canvas */}
         <canvas
           ref={canvasRef}
           className="block h-full w-full touch-none cursor-crosshair"
@@ -91,11 +112,12 @@ function GameView({
 
         {/* Top Floating Bar for Embedded Console */}
         <div className="pointer-events-none absolute left-0 right-0 top-0 flex items-center justify-between p-4">
-          <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-gold-500/40 bg-slate-950/85 px-3 py-1.5 text-xs text-gold-300 shadow backdrop-blur-md">
+          <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-gold-500/40 bg-slate-950/85 px-3.5 py-1.5 text-xs text-gold-300 shadow backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
             <span className="font-bold">Playable Citadel Arena</span>
             <span className="text-slate-400">|</span>
-            <span>Runes: <strong className="text-white">{collectedRunes.length}</strong>/5</span>
+            <span className="text-red-400 font-bold">Beasts: {monstersSlain}/2</span>
+            {skillsUnlocked && <span className="text-emerald-400 font-bold">★ Skills Unlocked!</span>}
           </div>
 
           <div className="pointer-events-auto flex items-center gap-2">
@@ -119,14 +141,15 @@ function GameView({
         </div>
 
         {/* Bottom Helper Bar */}
-        <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-slate-800 bg-slate-950/80 px-4 py-1 text-[10px] text-slate-300 shadow backdrop-blur-md">
-          🎮 WASD / Arrows to walk • Click ground to move • Press E to inspect shrines
+        <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-slate-800 bg-slate-950/85 px-4 py-1 text-[11px] text-slate-300 shadow backdrop-blur-md text-center whitespace-nowrap">
+          <span className="text-red-400 font-bold">⚔️ [Space/J]</span> to Slash • <span className="text-gold-400 font-bold">WASD / Click</span> to Walk • Defeat 2 Monsters to unlock Skills!
         </div>
 
         {/* Mobile touch controls */}
         <VirtualJoystick
           onMove={handleJoystickMove}
           onAction={handleJoystickAction}
+          onAttack={handleJoystickAttack}
         />
 
         {/* Dialogue Modal */}
@@ -148,7 +171,6 @@ function GameView({
   // 2. FULLSCREEN MODE
   return (
     <div className="fixed inset-0 z-50 h-screen w-screen overflow-hidden bg-slate-950 select-none">
-      {/* 60 FPS HTML5 Canvas */}
       <canvas
         ref={canvasRef}
         className="block h-full w-full touch-none cursor-crosshair"
@@ -158,14 +180,17 @@ function GameView({
       <GameHUD
         collectedCount={collectedRunes.length}
         totalCollectibles={5}
+        monstersSlain={monstersSlain}
+        totalMonsters={2}
         onToggleViewMode={onToggleViewMode}
         houseTheme={houseTheme}
       />
 
-      {/* Mobile Virtual Joystick */}
+      {/* Mobile Virtual Joystick with Attack */}
       <VirtualJoystick
         onMove={handleJoystickMove}
         onAction={handleJoystickAction}
+        onAttack={handleJoystickAttack}
       />
 
       {/* Dialogue / Item Details Modal */}

@@ -43,9 +43,82 @@ class SoundEngine {
 
       osc.start(now);
       osc.stop(now + 0.25);
-    } catch (e) {
-      // Audio autoplay policy
-    }
+    } catch (e) {}
+  }
+
+  playSlash() {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.exponentialRampToValueAtTime(150, now + 0.12);
+
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.12);
+    } catch (e) {}
+  }
+
+  playMonsterHit() {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(180, now);
+      osc.frequency.exponentialRampToValueAtTime(70, now + 0.15);
+
+      gain.gain.setValueAtTime(0.25, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.15);
+    } catch (e) {}
+  }
+
+  playMonsterDeath() {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(260, now);
+      osc.frequency.exponentialRampToValueAtTime(40, now + 0.4);
+
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.4);
+    } catch (e) {}
   }
 
   playPickup() {
@@ -85,6 +158,7 @@ class SoundEngine {
         { freqs: [440, 554.37, 659.25], time: 0 }, // A chord
         { freqs: [493.88, 622.25, 739.99], time: 0.15 }, // B chord
         { freqs: [523.25, 659.25, 783.99, 1046.5], time: 0.3 }, // C major triumph
+        { freqs: [659.25, 783.99, 1046.5, 1318.5], time: 0.5 }, // High C fanfare
       ];
 
       chords.forEach(({ freqs, time }) => {
@@ -96,14 +170,14 @@ class SoundEngine {
           osc.type = "triangle";
           osc.frequency.setValueAtTime(f, startTime);
 
-          gain.gain.setValueAtTime(0.12, startTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.4);
+          gain.gain.setValueAtTime(0.15, startTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.45);
 
           osc.connect(gain);
           gain.connect(this.ctx.destination);
 
           osc.start(startTime);
-          osc.stop(startTime + 0.4);
+          osc.stop(startTime + 0.45);
         });
       });
     } catch (e) {}

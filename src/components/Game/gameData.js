@@ -225,18 +225,19 @@ export const INTERACTABLES = [
     },
   },
 
-  // Spire of Elements - Skills
+  // Spire of Elements - Skills (Guarded by 2 Monsters)
   {
     id: "skill_altar",
     name: "Altar of Skills",
-    title: "Mastery of Code & Hardware",
+    title: "Guarded by 2 Monsters",
     type: "altar",
     x: 1400,
     y: 470,
     avatar: "⚡",
-    badge: "Skill Tree",
+    badge: "Monster Arena",
     icon: "💎",
     category: "skills",
+    requiresDefeat: true,
     dialogue: {
       headline: "Sarthak's Arsenal of Skills",
       subtitle: "Elemental proficiencies honed across software and embedded domains",
@@ -360,3 +361,38 @@ export const COLLECTIBLES = [
   { id: "rune_element", name: "Crystal of Wisdom", x: 1470, y: 440, color: "#10b981", hint: "Floating beside the Skill Spire" },
   { id: "rune_scroll", name: "Maester's Golden Quill", x: 380, y: 1080, color: "#8b5cf6", hint: "Tucked inside the Grand Archive library" },
 ];
+
+// 2 Monsters Guarding the Skills Arena
+export const MONSTERS = [
+  {
+    id: "monster_bug",
+    name: "Bug Fiend",
+    title: "Shadow Beast",
+    x: 1330,
+    y: 450,
+    maxHp: 60,
+    hp: 60,
+    speed: 1.8,
+    attackPower: 8,
+    color: "#ef4444",
+    icon: "👾",
+    size: 20,
+    zone: "skills",
+  },
+  {
+    id: "monster_drake",
+    name: "Glitch Drake",
+    title: "Cyber Dragon",
+    x: 1470,
+    y: 480,
+    maxHp: 80,
+    hp: 80,
+    speed: 2.1,
+    attackPower: 12,
+    color: "#a855f7",
+    icon: "🐉",
+    size: 24,
+    zone: "skills",
+  },
+];
+
