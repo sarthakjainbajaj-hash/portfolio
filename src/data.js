@@ -5,6 +5,7 @@ export const navLinks = [
   { id: "projects", label: "Projects" },
   { id: "skills", label: "Skills" },
   { id: "certifications", label: "Certifications" },
+  { id: "resume", label: "Resume" },
   { id: "contact", label: "Contact" },
 ];
 

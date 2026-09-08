@@ -2,7 +2,7 @@ import { useState } from "react";
 import ThreeHeroObject from "./ThreeHeroObject";
 import TiltCard from "./TiltCard";
 
-function Hero({ houseTheme = "stark" }) {
+function Hero({ houseTheme = "stark", onPlayGame }) {
   const [heroMode, setHeroMode] = useState("3d");
 
   return (
@@ -32,11 +32,18 @@ function Hero({ houseTheme = "stark" }) {
             </p>
 
             <div className="mt-10 flex flex-wrap gap-4">
+              <button
+                type="button"
+                onClick={onPlayGame}
+                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-gold-600 px-7 py-3 text-sm font-bold text-white shadow-premium transition duration-300 hover:-translate-y-1 hover:shadow-gold-500/30 animate-pulse"
+              >
+                <span>🎮</span> Play Citadel Game
+              </button>
               <a
                 href="#projects"
-                className="rounded-xl bg-brand-600 px-7 py-3 text-sm font-semibold text-white shadow-premium transition duration-300 hover:-translate-y-1 hover:bg-brand-500"
+                className="glass-card rounded-xl px-7 py-3 text-sm font-semibold text-slate-200 transition duration-300 hover:-translate-y-1 hover:bg-slate-900/60"
               >
-                Enter the Realm
+                Explore Projects
               </a>
               <a
                 href="#contact"
