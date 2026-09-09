@@ -10,7 +10,7 @@ import Projects from "./components/Projects";
 import Resume from "./components/Resume";
 import Skills from "./components/Skills";
 import ThreeBackground from "./components/ThreeBackground";
-import GameView from "./components/Game/GameView";
+import ThreeGameView from "./components/Game3D/ThreeGameView";
 
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -48,10 +48,10 @@ function App() {
     document.documentElement.dataset.house = house;
   };
 
-  // 1. FULLSCREEN IMMERSIVE RPG GAME VIEW
+  // 1. FULLSCREEN IMMERSIVE RPG 3D GAME VIEW
   if (viewMode === "game") {
     return (
-      <GameView
+      <ThreeGameView
         onToggleViewMode={() => setViewMode("website")}
         houseTheme={houseTheme}
         isFullscreen={true}
@@ -97,7 +97,7 @@ function App() {
             </button>
           </div>
 
-          <GameView
+          <ThreeGameView
             isEmbedded={true}
             onOpenFullscreen={() => setViewMode("game")}
             houseTheme={houseTheme}
