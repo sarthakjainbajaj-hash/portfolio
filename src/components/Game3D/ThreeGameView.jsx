@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ThreeGameEngine } from "./ThreeGameEngine";
+import { ThreeGameEngine, INITIAL_MONSTERS } from "./ThreeGameEngine";
 import ThreeMiniMap from "./ThreeMiniMap";
 import GameHUD from "../Game/GameHUD";
 import GameDialogModal from "../Game/GameDialogModal";
@@ -25,10 +25,7 @@ function ThreeGameView({
   const [skillsUnlocked, setSkillsUnlocked] = useState(false);
   const [playerHp, setPlayerHp] = useState(100);
   const [playerPos, setPlayerPos] = useState({ x: 0, z: 8 });
-  const [monsters, setMonsters] = useState([
-    { id: "monster_bug", name: "Bug Fiend", x: 43, z: -12, hp: 60, maxHp: 60, isDead: false, type: "bug" },
-    { id: "monster_drake", name: "Glitch Drake", x: 53, z: -4, hp: 80, maxHp: 80, isDead: false, type: "drake" },
-  ]);
+  const [monsters, setMonsters] = useState(INITIAL_MONSTERS);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -92,6 +89,12 @@ function ThreeGameView({
   const handleJoystickAttack = () => {
     if (engineRef.current) {
       engineRef.current.attack();
+    }
+  };
+
+  const handleJoystickSpinAttack = () => {
+    if (engineRef.current) {
+      engineRef.current.spinAttack();
     }
   };
 
@@ -166,7 +169,7 @@ function ThreeGameView({
 
         {/* Bottom Helper Bar */}
         <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-slate-800 bg-slate-950/85 px-4 py-1 text-[11px] text-slate-300 shadow backdrop-blur-md text-center whitespace-nowrap z-20">
-          <span className="text-red-400 font-bold">⚔️ [Space/J]</span> Slash Sword • <span className="text-gold-400 font-bold">WASD / Drag</span> 3D Orbit • Defeat 2 Monsters for Skills!
+          <span className="text-red-400 font-bold">⚔️ [Space/J]</span> Slash • <span className="text-amber-400 font-bold">💥 [Q/K]</span> Whirlwind • <span className="text-gold-400 font-bold">WASD / Drag</span> 3D Orbit • Slay Guardians for Skills!
         </div>
 
         {/* Mobile touch controls */}
@@ -174,6 +177,7 @@ function ThreeGameView({
           onMove={handleJoystickMove}
           onAction={handleJoystickAction}
           onAttack={handleJoystickAttack}
+          onSpinAttack={handleJoystickSpinAttack}
         />
 
         {/* Dialogue Modal */}
@@ -208,7 +212,7 @@ function ThreeGameView({
         collectedCount={skillsUnlocked ? 5 : monstersSlain}
         totalCollectibles={5}
         monstersSlain={monstersSlain}
-        totalMonsters={2}
+        totalMonsters={monsters.length}
         playerHp={playerHp}
         onToggleViewMode={onToggleViewMode}
         houseTheme={houseTheme}
@@ -239,6 +243,7 @@ function ThreeGameView({
         onMove={handleJoystickMove}
         onAction={handleJoystickAction}
         onAttack={handleJoystickAttack}
+        onSpinAttack={handleJoystickSpinAttack}
       />
 
       {/* Dialogue / Item Details Modal */}

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-function VirtualJoystick({ onMove, onAction, onAttack }) {
+function VirtualJoystick({ onMove, onAction, onAttack, onSpinAttack }) {
   const stickRef = useRef(null);
   const baseRef = useRef(null);
   const touchIdRef = useRef(null);
@@ -98,6 +98,19 @@ function VirtualJoystick({ onMove, onAction, onAttack }) {
         >
           ⚔️
         </button>
+
+        {/* Whirlwind Spin Attack Button */}
+        {onSpinAttack && (
+          <button
+            onClick={onSpinAttack}
+            type="button"
+            aria-label="Spin Attack"
+            className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-amber-400 bg-gradient-to-br from-amber-500 to-yellow-600 text-lg font-extrabold text-white shadow-xl active:scale-90"
+            title="Whirlwind Spin Attack (AOE)"
+          >
+            💥
+          </button>
+        )}
 
         {/* Interact Button */}
         <button
