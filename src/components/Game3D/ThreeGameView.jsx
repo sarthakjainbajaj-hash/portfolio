@@ -26,6 +26,17 @@ function ThreeGameView({
   const [playerHp, setPlayerHp] = useState(100);
   const [playerPos, setPlayerPos] = useState({ x: 0, z: 8 });
   const [monsters, setMonsters] = useState(INITIAL_MONSTERS);
+  const [stats, setStats] = useState({
+    hp: 100,
+    maxHp: 100,
+    mana: 60,
+    maxMana: 60,
+    exp: 0,
+    maxExp: 100,
+    level: 1,
+    gold: 0,
+    boss: null,
+  });
 
   useEffect(() => {
     const container = containerRef.current;
@@ -56,6 +67,10 @@ function ThreeGameView({
       onHpChange: (hp) => {
         setPlayerHp(hp);
       },
+      onStatsChange: (newStats) => {
+        setStats(newStats);
+        setPlayerHp(newStats.hp);
+      },
       onPromptChange: (item) => {
         setPromptItem(item);
       },
@@ -80,21 +95,33 @@ function ThreeGameView({
     }
   };
 
-  const handleJoystickAction = () => {
+  const handleAction = () => {
     if (engineRef.current) {
       engineRef.current.interact();
     }
   };
 
-  const handleJoystickAttack = () => {
+  const handleAttack = () => {
     if (engineRef.current) {
       engineRef.current.attack();
     }
   };
 
-  const handleJoystickSpinAttack = () => {
+  const handleSpinAttack = () => {
     if (engineRef.current) {
       engineRef.current.spinAttack();
+    }
+  };
+
+  const handleFireball = () => {
+    if (engineRef.current) {
+      engineRef.current.castFireball();
+    }
+  };
+
+  const handleDash = () => {
+    if (engineRef.current) {
+      engineRef.current.dash();
     }
   };
 
@@ -118,12 +145,17 @@ function ThreeGameView({
         <ThreeMiniMap playerPos={playerPos} monsters={monsters} isEmbedded={true} />
 
         {/* Top Floating Bar */}
-        <div className="pointer-events-none absolute left-0 right-0 top-0 flex items-center justify-between p-4 z-30">
-          <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-gold-500/40 bg-slate-950/85 px-3.5 py-1.5 text-xs text-gold-300 shadow backdrop-blur-md">
+        <div className="pointer-events-none absolute left-0 right-0 top-0 flex items-center justify-between p-3 sm:p-4 z-30">
+          <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-gold-500/40 bg-slate-950/90 px-3.5 py-1.5 text-xs text-gold-300 shadow backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-            <span className="font-bold">3D Citadel Realm</span>
-            <span className="text-slate-400">|</span>
-            <span className="text-red-400 font-bold">Beasts: {monstersSlain}/2</span>
+            <span className="font-bold">Lv.{stats.level} Warrior</span>
+            <span className="text-slate-500">|</span>
+            <span className="text-red-400 font-bold">HP {Math.round(stats.hp)}</span>
+            <span className="text-slate-500">|</span>
+            <span className="text-cyan-400 font-bold">MP {Math.round(stats.mana)}</span>
+            <span className="text-slate-500">|</span>
+            <span className="text-amber-300 font-bold">🪙 {stats.gold}</span>
+            {stats.boss && <span className="text-rose-400 font-black animate-pulse">🐲 BOSS NEARBY!</span>}
             {skillsUnlocked && <span className="text-emerald-400 font-bold">★ Skills Unlocked!</span>}
           </div>
 
@@ -169,15 +201,17 @@ function ThreeGameView({
 
         {/* Bottom Helper Bar */}
         <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-slate-800 bg-slate-950/85 px-4 py-1 text-[11px] text-slate-300 shadow backdrop-blur-md text-center whitespace-nowrap z-20">
-          <span className="text-red-400 font-bold">⚔️ [Space/J]</span> Slash • <span className="text-amber-400 font-bold">💥 [Q/K]</span> Whirlwind • <span className="text-gold-400 font-bold">WASD / Drag</span> 3D Orbit • Slay Guardians for Skills!
+          <span className="text-red-400 font-bold">⚔️ [Space/J]</span> Slash • <span className="text-amber-400 font-bold">💥 [Q/K]</span> Whirlwind • <span className="text-orange-400 font-bold">🔥 [R/F]</span> Fireball • <span className="text-cyan-400 font-bold">💨 [Shift]</span> Dash
         </div>
 
         {/* Mobile touch controls */}
         <VirtualJoystick
           onMove={handleJoystickMove}
-          onAction={handleJoystickAction}
-          onAttack={handleJoystickAttack}
-          onSpinAttack={handleJoystickSpinAttack}
+          onAction={handleAction}
+          onAttack={handleAttack}
+          onSpinAttack={handleSpinAttack}
+          onFireball={handleFireball}
+          onDash={handleDash}
         />
 
         {/* Dialogue Modal */}
@@ -213,7 +247,20 @@ function ThreeGameView({
         totalCollectibles={5}
         monstersSlain={monstersSlain}
         totalMonsters={monsters.length}
-        playerHp={playerHp}
+        playerHp={stats.hp}
+        playerMaxHp={stats.maxHp}
+        playerMana={stats.mana}
+        playerMaxMana={stats.maxMana}
+        playerExp={stats.exp}
+        playerMaxExp={stats.maxExp}
+        playerLevel={stats.level}
+        playerGold={stats.gold}
+        boss={stats.boss}
+        onAttack={handleAttack}
+        onSpinAttack={handleSpinAttack}
+        onCastFireball={handleFireball}
+        onDash={handleDash}
+        onInteract={handleAction}
         onToggleViewMode={onToggleViewMode}
         houseTheme={houseTheme}
       />
@@ -238,12 +285,14 @@ function ThreeGameView({
         </div>
       )}
 
-      {/* Mobile Virtual Joystick with Attack */}
+      {/* Mobile Virtual Joystick with Full Abilities */}
       <VirtualJoystick
         onMove={handleJoystickMove}
-        onAction={handleJoystickAction}
-        onAttack={handleJoystickAttack}
-        onSpinAttack={handleJoystickSpinAttack}
+        onAction={handleAction}
+        onAttack={handleAttack}
+        onSpinAttack={handleSpinAttack}
+        onFireball={handleFireball}
+        onDash={handleDash}
       />
 
       {/* Dialogue / Item Details Modal */}

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-function VirtualJoystick({ onMove, onAction, onAttack, onSpinAttack }) {
+function VirtualJoystick({ onMove, onAction, onAttack, onSpinAttack, onFireball, onDash }) {
   const stickRef = useRef(null);
   const baseRef = useRef(null);
   const touchIdRef = useRef(null);
@@ -75,7 +75,7 @@ function VirtualJoystick({ onMove, onAction, onAttack, onSpinAttack }) {
   }, [onMove]);
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-6 z-40 flex items-end justify-between px-6 md:hidden">
+    <div className="pointer-events-none fixed inset-x-0 bottom-6 z-40 flex items-end justify-between px-4 sm:px-6 md:hidden">
       {/* Virtual D-Pad */}
       <div
         ref={baseRef}
@@ -87,39 +87,67 @@ function VirtualJoystick({ onMove, onAction, onAttack, onSpinAttack }) {
         />
       </div>
 
-      {/* Action & Attack Buttons */}
-      <div className="pointer-events-auto flex items-center gap-3">
-        {/* Sword Attack Button */}
+      {/* Action & Combat Buttons Cluster */}
+      <div className="pointer-events-auto grid grid-cols-3 gap-2 items-center">
+        {/* Dash (Top Left) */}
+        {onDash && (
+          <button
+            onClick={onDash}
+            type="button"
+            aria-label="Dragon Dash"
+            className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-cyan-400 bg-gradient-to-br from-cyan-600 to-blue-700 text-base font-extrabold text-white shadow-lg active:scale-90"
+            title="Dragon Dash / Dodge Roll"
+          >
+            💨
+          </button>
+        )}
+
+        {/* Fireball (Top Center) */}
+        {onFireball && (
+          <button
+            onClick={onFireball}
+            type="button"
+            aria-label="Cast Fireball"
+            className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-orange-500 bg-gradient-to-br from-orange-600 to-red-600 text-base font-extrabold text-white shadow-xl active:scale-90"
+            title="Cast Fireball Spell"
+          >
+            🔥
+          </button>
+        )}
+
+        {/* Interact (Top Right) */}
         <button
-          onClick={onAttack}
+          onClick={onAction}
           type="button"
-          aria-label="Attack with sword"
-          className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-red-500 bg-gradient-to-br from-red-600 to-amber-600 text-lg font-extrabold text-white shadow-2xl active:scale-90"
+          aria-label="Interact"
+          className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-gold-500 bg-gradient-to-br from-brand-600 to-gold-600 text-xs font-black text-white shadow-lg active:scale-90"
+          title="Interact [E]"
         >
-          ⚔️
+          [E]
         </button>
 
-        {/* Whirlwind Spin Attack Button */}
+        {/* Whirlwind Spin (Bottom Left) */}
         {onSpinAttack && (
           <button
             onClick={onSpinAttack}
             type="button"
             aria-label="Spin Attack"
-            className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-amber-400 bg-gradient-to-br from-amber-500 to-yellow-600 text-lg font-extrabold text-white shadow-xl active:scale-90"
+            className="col-start-1 flex h-11 w-11 items-center justify-center rounded-full border-2 border-amber-400 bg-gradient-to-br from-amber-500 to-yellow-600 text-base font-extrabold text-white shadow-lg active:scale-90"
             title="Whirlwind Spin Attack (AOE)"
           >
             💥
           </button>
         )}
 
-        {/* Interact Button */}
+        {/* Main Sword Attack (Large in Bottom Right / Span 2 cols) */}
         <button
-          onClick={onAction}
+          onClick={onAttack}
           type="button"
-          aria-label="Interact"
-          className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-gold-500 bg-gradient-to-br from-brand-600 to-gold-600 text-xs font-extrabold text-white shadow-xl active:scale-90"
+          aria-label="Attack with sword"
+          className="col-span-2 flex h-12 w-full items-center justify-center rounded-2xl border-2 border-red-500 bg-gradient-to-br from-red-600 to-amber-600 text-sm font-extrabold text-white shadow-2xl active:scale-95"
+          title="Sword Slash Combo"
         >
-          [E]
+          ⚔️ ATTACK
         </button>
       </div>
     </div>

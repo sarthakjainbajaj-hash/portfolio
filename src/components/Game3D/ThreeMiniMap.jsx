@@ -54,10 +54,11 @@ function ThreeMiniMap({ playerPos = { x: 0, z: 8, rotY: 0 }, monsters = [], isEm
           );
         })}
 
-        {/* Monsters (Pulsing Red / Purple Dots) */}
+        {/* Monsters (Pulsing Red / Purple / Dragon Boss) */}
         {monsters.map((m) => {
           if (m.isDead) return null;
           const coord = toMapCoord(m.x, m.z);
+          const isBoss = m.isBoss;
           const isGuardian = m.isGuardian;
           return (
             <div
@@ -66,7 +67,14 @@ function ThreeMiniMap({ playerPos = { x: 0, z: 8, rotY: 0 }, monsters = [], isEm
               className="absolute -translate-x-1/2 -translate-y-1/2"
               title={m.name}
             >
-              {isGuardian ? (
+              {isBoss ? (
+                <div className="relative">
+                  <span className="block h-5 w-5 rounded-full bg-amber-500/50 animate-ping" />
+                  <span className="absolute inset-0 flex items-center justify-center h-5 w-5 rounded-full bg-red-950 border-2 border-amber-400 text-[10px] shadow-lg">
+                    🐲
+                  </span>
+                </div>
+              ) : isGuardian ? (
                 <div className="relative">
                   <span className="block h-3.5 w-3.5 rounded-full bg-purple-500 shadow-sm animate-ping" />
                   <span className="absolute inset-0 flex items-center justify-center h-3.5 w-3.5 rounded-full bg-purple-700 border border-yellow-300 text-[8px]">💀</span>
