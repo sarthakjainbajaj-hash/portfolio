@@ -1,8 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaExternalLinkAlt, FaGithub, FaFilePdf, FaTimes, FaEnvelope, FaPhoneAlt, FaLinkedin, FaMapMarkerAlt } from "react-icons/fa";
 import { sound } from "./soundEngine";
 
 function GameDialogModal({ item, onClose, onSwitchToClassic }) {
+  const [showLivePreview, setShowLivePreview] = useState(false);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape" || e.key === "e" || e.key === "E") {
@@ -115,28 +117,66 @@ function GameDialogModal({ item, onClose, onSwitchToClassic }) {
 
           {/* Project Action Links */}
           {(dialogue.liveUrl || dialogue.githubUrl) && (
-            <div className="flex flex-wrap gap-3 pt-3">
-              {dialogue.liveUrl && (
-                <a
-                  href={dialogue.liveUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-xs font-bold text-white shadow hover:bg-brand-500 transition"
-                >
-                  <span>Launch Live Platform</span>
-                  <FaExternalLinkAlt size={11} />
-                </a>
-              )}
-              {dialogue.githubUrl && (
-                <a
-                  href={dialogue.githubUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-5 py-2.5 text-xs font-bold text-slate-200 hover:border-gold-500 hover:text-white transition"
-                >
-                  <FaGithub size={13} />
-                  <span>Inspect Source Code</span>
-                </a>
+            <div className="flex flex-col gap-3 pt-3">
+              <div className="flex flex-wrap gap-2.5">
+                {dialogue.liveUrl && (
+                  <button
+                    type="button"
+                    onClick={() => setShowLivePreview((prev) => !prev)}
+                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg hover:brightness-110 transition"
+                  >
+                    <span>{showLivePreview ? "Hide Live Application" : "⚡ Test Live App in Citadel"}</span>
+                  </button>
+                )}
+                {dialogue.liveUrl && (
+                  <a
+                    href={dialogue.liveUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-xs font-bold text-white shadow hover:bg-brand-500 transition"
+                  >
+                    <span>Open in New Tab</span>
+                    <FaExternalLinkAlt size={11} />
+                  </a>
+                )}
+                {dialogue.githubUrl && (
+                  <a
+                    href={dialogue.githubUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-5 py-2.5 text-xs font-bold text-slate-200 hover:border-gold-500 hover:text-white transition"
+                  >
+                    <FaGithub size={13} />
+                    <span>GitHub Code</span>
+                  </a>
+                )}
+              </div>
+
+              {/* Live Embedded Preview inside Citadel Game */}
+              {showLivePreview && dialogue.liveUrl && (
+                <div className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 overflow-hidden shadow-2xl animate-fadeIn ring-1 ring-emerald-500/40">
+                  <div className="flex items-center justify-between bg-slate-900 px-4 py-2 text-[11px] text-slate-300 border-b border-slate-800">
+                    <span className="flex items-center gap-2 text-emerald-400 font-bold">
+                      <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+                      Live Application Active
+                    </span>
+                    <a
+                      href={dialogue.liveUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-gold-400 hover:underline flex items-center gap-1 font-semibold"
+                    >
+                      Open Full Tab <FaExternalLinkAlt size={9} />
+                    </a>
+                  </div>
+                  <iframe
+                    src={dialogue.liveUrl}
+                    title={dialogue.headline || "Live Project"}
+                    className="w-full h-[460px] border-0 bg-white"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+                  />
+                </div>
               )}
             </div>
           )}
