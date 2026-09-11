@@ -7,13 +7,13 @@ export const WORLD_3D = {
   size: 260,
   spawn: { x: 0, y: 0, z: 8 },
   landmarks: {
-    citadel: { x: 0, z: -10, label: "Citadel Keep", icon: "🏰", id: "sarthak_avatar" },
-    experience: { x: -88, z: -15, label: "War Council", icon: "⚔️", id: "bluestock_master" },
-    projects: { x: 0, z: -88, label: "Arcane Forge", icon: "🔮", id: "proj_solvesphere" },
-    skills: { x: 88, z: -15, label: "Skills Lair", icon: "💎", id: "skill_altar" },
-    education: { x: -75, z: 75, label: "Grand Archive", icon: "📚", id: "archive_tome" },
-    contact: { x: 75, z: 75, label: "Raven Eyrie", icon: "🦅", id: "raven_eyrie" },
-    boss: { x: 0, z: -115, label: "Dragon's Lair", icon: "🐲", id: "dragon_boss_altar" },
+    citadel: { x: 0, z: -10, label: "About Sarthak", icon: "👑", id: "sarthak_avatar", title: "About Sarthak", subtitle: "AI & Full-Stack Architect", color: "#f59e0b" },
+    projects: { x: 0, z: -88, label: "Projects & SolveSphere", icon: "🛠️", id: "proj_solvesphere", title: "Projects Archive", subtitle: "SolveSphere SIH-26043 & Apps", color: "#ef4444" },
+    experience: { x: -88, z: -15, label: "Experience & Internships", icon: "💼", id: "bluestock_master", title: "Experience Guild", subtitle: "Bluestock & Yuga Yatra", color: "#f59e0b" },
+    skills: { x: 88, z: -15, label: "Technical Skills", icon: "⚡", id: "skill_altar", title: "Spire of Skills", subtitle: "AI/ML, React, Python, Node", color: "#10b981" },
+    education: { x: -75, z: 75, label: "Education & Resume", icon: "🎓", id: "archive_tome", title: "Grand Archive", subtitle: "MITS & IIT Roorkee", color: "#8b5cf6" },
+    contact: { x: 75, z: 75, label: "Contact & Socials", icon: "📬", id: "raven_eyrie", title: "Raven Eyrie", subtitle: "Email, GitHub, LinkedIn", color: "#06b6d4" },
+    boss: { x: 0, z: -115, label: "Dragon Boss (Bonus RPG)", icon: "🐲", id: "dragon_boss_altar", title: "Glacial Arena", subtitle: "Viserion Boss Battle", color: "#ef4444" },
   },
 };
 
@@ -167,6 +167,9 @@ export class ThreeGameEngine {
     this.projectiles = [];
     this.lootItems = [];
     this.floatingTexts = [];
+    this.landmarkBanners = [];
+    this.groundRings = [];
+    this.footstepTimer = 0;
     this.activeInteractable = null;
 
     // Bindings
@@ -495,6 +498,98 @@ export class ThreeGameEngine {
     this.buildLandmarkMeshes();
   }
 
+  createLandmarkHoloBanner(title, subtitle, icon, colorHex, x, y, z) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 140;
+    const ctx = canvas.getContext("2d");
+
+    // Dark pill background with glowing border
+    ctx.fillStyle = "rgba(7, 12, 24, 0.92)";
+    ctx.strokeStyle = colorHex;
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.roundRect(8, 8, 496, 124, 24);
+    ctx.fill();
+    ctx.stroke();
+
+    // Subtle inner gradient glow
+    const grad = ctx.createLinearGradient(0, 0, 512, 0);
+    grad.addColorStop(0, colorHex + "33");
+    grad.addColorStop(1, "transparent");
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Main Title with Icon
+    ctx.font = "bold 30px sans-serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = "left";
+    ctx.shadowColor = colorHex;
+    ctx.shadowBlur = 10;
+    ctx.fillText(`${icon} ${title}`, 24, 56);
+
+    // Subtitle
+    ctx.font = "bold 20px sans-serif";
+    ctx.fillStyle = "#94a3b8";
+    ctx.shadowBlur = 0;
+    ctx.fillText(subtitle, 26, 96);
+
+    // Press [E] Action Tag
+    ctx.font = "bold 18px monospace";
+    ctx.fillStyle = "#facc15";
+    ctx.textAlign = "right";
+    ctx.fillText("[E] Inspect", 486, 96);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.minFilter = THREE.LinearFilter;
+    const spriteMat = new THREE.SpriteMaterial({
+      map: texture,
+      transparent: true,
+      depthTest: false,
+    });
+    const sprite = new THREE.Sprite(spriteMat);
+    sprite.position.set(x, y, z);
+    sprite.scale.set(13.5, 3.7, 1);
+    this.scene.add(sprite);
+
+    this.landmarkBanners.push({
+      sprite,
+      baseY: y,
+      speed: 1.8 + Math.random() * 0.4,
+    });
+  }
+
+  createBeaconBeam(colorHex, x, z) {
+    // Vertical Light Shaft
+    const beamGeo = new THREE.CylinderGeometry(0.8, 1.8, 80, 16);
+    const beamMat = new THREE.MeshBasicMaterial({
+      color: new THREE.Color(colorHex),
+      transparent: true,
+      opacity: 0.16,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    const beam = new THREE.Mesh(beamGeo, beamMat);
+    beam.position.set(x, 40, z);
+    this.scene.add(beam);
+
+    // Pulsing Ground Ring
+    const ringGeo = new THREE.RingGeometry(3.5, 4.3, 32);
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: new THREE.Color(colorHex),
+      transparent: true,
+      opacity: 0.55,
+      side: THREE.DoubleSide,
+    });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.rotation.x = -Math.PI / 2;
+    ring.position.set(x, 0.15, z);
+    this.scene.add(ring);
+
+    this.groundRings.push({ ring, baseScale: 1.0 });
+  }
+
   buildLandmarkMeshes() {
     this.shrineMeshes = [];
 
@@ -595,6 +690,28 @@ export class ThreeGameEngine {
     ravenPerch.position.set(75, 3.0, 75);
     this.scene.add(ravenPerch);
     this.shrineMeshes.push({ mesh: ravenPerch, id: "raven_eyrie", rotSpeed: 0 });
+
+    // Add 3D Holographic Title Banners & Beacons for each Portfolio Landmark
+    this.createLandmarkHoloBanner("ABOUT SARTHAK", "AI & Full-Stack Architect", "👑", "#38bdf8", 0, 9.5, -10);
+    this.createBeaconBeam("#38bdf8", 0, -10);
+
+    this.createLandmarkHoloBanner("PROJECTS ARCHIVE", "SolveSphere SIH-26043 & Apps", "🛠️", "#ef4444", 0, 10.5, -88);
+    this.createBeaconBeam("#ef4444", 0, -88);
+
+    this.createLandmarkHoloBanner("EXPERIENCE & INTERNSHIPS", "Bluestock & Yuga Yatra", "💼", "#f59e0b", -88, 10.5, -15);
+    this.createBeaconBeam("#f59e0b", -88, -15);
+
+    this.createLandmarkHoloBanner("TECHNICAL SKILLS", "AI/ML, React, Node, Python", "⚡", "#10b981", 88, 10.5, -15);
+    this.createBeaconBeam("#10b981", 88, -15);
+
+    this.createLandmarkHoloBanner("EDUCATION & RESUME", "MITS & IIT Roorkee", "🎓", "#a855f7", -75, 10.5, 75);
+    this.createBeaconBeam("#a855f7", -75, 75);
+
+    this.createLandmarkHoloBanner("CONTACT & SOCIALS", "Email, LinkedIn, GitHub", "📬", "#06b6d4", 75, 10.5, 75);
+    this.createBeaconBeam("#06b6d4", 75, 75);
+
+    // Welcome Plaque at Spawn Portal (0, 0, 8)
+    this.createLandmarkHoloBanner("SARTHAK JAIN BAJAJ", "Interactive 3D Portfolio Realm", "🌟", "#fbbf24", 0, 7.5, 8);
   }
 
   // 2. BUILD 3D ARMORED SOLDIER WARRIOR
@@ -1251,6 +1368,61 @@ export class ThreeGameEngine {
     this.onInteract(this.activeInteractable);
   }
 
+  fastTravelTo(landmarkKey) {
+    const lm = WORLD_3D.landmarks[landmarkKey];
+    if (!lm) return;
+    this.player.x = lm.x;
+    this.player.z = lm.z + 5.5;
+    this.player.rotY = Math.PI; // Face towards shrine
+    this.spawnTeleportParticles(this.player.x, 1.5, this.player.z);
+    sound.playInteract();
+
+    // Auto-discover / trigger interaction
+    const item = INTERACTABLES.find((i) => i.id === lm.id);
+    if (item) {
+      this.activeInteractable = item;
+      setTimeout(() => {
+        this.triggerInteraction();
+      }, 250);
+    }
+  }
+
+  spawnTeleportParticles(x, y, z) {
+    for (let i = 0; i < 32; i++) {
+      const geo = new THREE.SphereGeometry(0.2, 4, 4);
+      const mat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+      const p = new THREE.Mesh(geo, mat);
+      p.position.set(x, y, z);
+      const theta = Math.random() * Math.PI * 2;
+      const vy = Math.random() * 8 + 3;
+      this.particles.push({
+        mesh: p,
+        vx: Math.cos(theta) * (Math.random() * 5 + 2),
+        vy,
+        vz: Math.sin(theta) * (Math.random() * 5 + 2),
+        life: 0.6,
+        maxLife: 0.6,
+      });
+      this.scene.add(p);
+    }
+  }
+
+  spawnDustParticle(x, y, z) {
+    const geo = new THREE.SphereGeometry(0.18, 4, 4);
+    const mat = new THREE.MeshBasicMaterial({ color: 0x64748b, transparent: true, opacity: 0.5 });
+    const p = new THREE.Mesh(geo, mat);
+    p.position.set(x + (Math.random() - 0.5) * 0.4, y, z + (Math.random() - 0.5) * 0.4);
+    this.scene.add(p);
+    this.particles.push({
+      mesh: p,
+      vx: (Math.random() - 0.5) * 0.6,
+      vy: Math.random() * 0.7 + 0.3,
+      vz: (Math.random() - 0.5) * 0.6,
+      life: 0.35,
+      maxLife: 0.35,
+    });
+  }
+
   interact() {
     this.triggerInteraction();
   }
@@ -1281,6 +1453,17 @@ export class ThreeGameEngine {
     // Rotate holographic landmarks
     this.shrineMeshes.forEach((s) => {
       if (s.rotSpeed !== 0) s.mesh.rotation.y += s.rotSpeed;
+    });
+
+    // Float Holographic 3D Landmark Banners (Gentle Sine Wave Bobbing)
+    this.landmarkBanners.forEach((b, i) => {
+      b.sprite.position.y = b.baseY + Math.sin(t * b.speed + i) * 0.45;
+    });
+
+    // Pulse Ground Aura Rings
+    this.groundRings.forEach((gr, i) => {
+      const scale = 1.0 + Math.sin(t * 2.5 + i) * 0.12;
+      gr.ring.scale.set(scale, scale, 1);
     });
 
     // Player Input & Movement
@@ -1326,6 +1509,13 @@ export class ThreeGameEngine {
       this.player.stepCycle += delta * 13;
 
       this.onPlayerMove(this.player.x, this.player.z);
+
+      // Running Dust Particle Trail
+      this.footstepTimer += delta;
+      if (this.footstepTimer > 0.14) {
+        this.footstepTimer = 0;
+        this.spawnDustParticle(this.player.x, 0.12, this.player.z);
+      }
     } else {
       this.player.isMoving = false;
     }
@@ -1335,7 +1525,7 @@ export class ThreeGameEngine {
     this.player.x = Math.max(-bound, Math.min(bound, this.player.x));
     this.player.z = Math.max(-bound, Math.min(bound, this.player.z));
 
-    // Soldier Mesh Transforms & Running Animations
+    // Soldier Mesh Transforms & Dynamic Animations
     this.soldierGroup.position.set(this.player.x, 0, this.player.z);
 
     if (this.player.spinTimer > 0) {
@@ -1345,6 +1535,7 @@ export class ThreeGameEngine {
     }
 
     if (this.player.isMoving && !this.player.isDashing) {
+      // Dynamic Running Stride
       const legAngle = Math.sin(this.player.stepCycle) * 0.65;
       this.leftLeg.rotation.x = legAngle;
       this.rightLeg.rotation.x = -legAngle;
@@ -1352,11 +1543,14 @@ export class ThreeGameEngine {
       this.rightArm.rotation.x = legAngle * 0.5;
       this.cape.rotation.x = 0.4 + Math.sin(this.player.stepCycle * 2) * 0.15;
     } else {
+      // Idle Breathing & Natural Posture Sway
       this.leftLeg.rotation.x = 0;
       this.rightLeg.rotation.x = 0;
-      this.leftArm.rotation.x = 0;
-      this.cape.rotation.x = 0.08 + Math.sin(t * 2) * 0.05;
-      this.soldierGroup.position.y = Math.sin(t * 3) * 0.05;
+      this.leftArm.rotation.x = Math.sin(t * 2.5) * 0.08;
+      this.rightArm.rotation.x = Math.sin(t * 2.5) * 0.08;
+      this.rightArm.rotation.z = Math.sin(t * 2.5) * 0.04;
+      this.cape.rotation.x = 0.08 + Math.sin(t * 2) * 0.06;
+      this.soldierGroup.position.y = Math.sin(t * 3) * 0.06;
     }
 
     // Light Attack Slash animation

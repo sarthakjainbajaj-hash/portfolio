@@ -125,6 +125,12 @@ function ThreeGameView({
     }
   };
 
+  const handleFastTravel = (key) => {
+    if (engineRef.current) {
+      engineRef.current.fastTravelTo(key);
+    }
+  };
+
   const toggleSound = () => {
     const next = !isMuted;
     setIsMuted(next);
@@ -261,6 +267,7 @@ function ThreeGameView({
         onCastFireball={handleFireball}
         onDash={handleDash}
         onInteract={handleAction}
+        onFastTravel={handleFastTravel}
         onToggleViewMode={onToggleViewMode}
         houseTheme={houseTheme}
       />
