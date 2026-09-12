@@ -80,6 +80,20 @@ export class RageRoomEngine {
     this.targetPracticeZone = "chest"; // 'head', 'chest', 'belly'
     this.targetTimer = 0;
 
+    // Dummy Movement & Fleeing AI (runs away scared when player hits or gets close!)
+    this.dummy = {
+      x: 0,
+      y: 0,
+      z: -1.2,
+      vx: 0,
+      vz: 0,
+      rotY: 0,
+      speed: 7.2,
+      isFleeing: false,
+      fleeTimer: 0,
+      animTime: 0,
+    };
+
     // Dummy Animation Physics
     this.dummyWobbleX = 0;
     this.dummyWobbleZ = 0;
@@ -418,19 +432,55 @@ export class RageRoomEngine {
   // 2. BUILD THE HUMANOID CARTOON TRAINING DUMMY
   buildDummy() {
     this.dummyGroup = new THREE.Group();
-    this.dummyGroup.position.set(0, 0, 0);
+    this.dummyGroup.position.set(this.dummy.x, 0, this.dummy.z);
 
-    // Heavy Metal Base Plate
-    const baseGeo = new THREE.CylinderGeometry(1.2, 1.4, 0.25, 24);
-    const baseMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8, roughness: 0.3 });
-    const baseMesh = new THREE.Mesh(baseGeo, baseMat);
-    baseMesh.position.y = 0.125;
-    baseMesh.receiveShadow = true;
-    this.dummyGroup.add(baseMesh);
+    // Legs & Cute Running Shoes Assembly (for funny fleeing animation!)
+    const legGeo = new THREE.CylinderGeometry(0.09, 0.11, 0.42, 12);
+    const legMat = new THREE.MeshStandardMaterial({ color: 0x92400e, roughness: 0.7 });
+    const shoeGeo = new THREE.BoxGeometry(0.2, 0.14, 0.36);
+    const shoeMat = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.5 });
+
+    // Left Leg
+    const legLGroup = new THREE.Group();
+    legLGroup.position.set(-0.24, 0.44, 0);
+    const legLMesh = new THREE.Mesh(legGeo, legMat);
+    legLMesh.position.y = -0.21;
+    legLMesh.castShadow = true;
+    legLGroup.add(legLMesh);
+
+    const shoeL = new THREE.Mesh(shoeGeo, shoeMat);
+    shoeL.position.set(0, -0.38, 0.08);
+    shoeL.castShadow = true;
+    legLGroup.add(shoeL);
+    this.dummyGroup.add(legLGroup);
+    this.dummyLegL = legLGroup;
+
+    // Right Leg
+    const legRGroup = new THREE.Group();
+    legRGroup.position.set(0.24, 0.44, 0);
+    const legRMesh = new THREE.Mesh(legGeo, legMat);
+    legRMesh.position.y = -0.21;
+    legRMesh.castShadow = true;
+    legRGroup.add(legRMesh);
+
+    const shoeR = new THREE.Mesh(shoeGeo, shoeMat);
+    shoeR.position.set(0, -0.38, 0.08);
+    shoeR.castShadow = true;
+    legRGroup.add(shoeR);
+    this.dummyGroup.add(legRGroup);
+    this.dummyLegR = legRGroup;
+
+    // Hip joint plate
+    const hip = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.35, 0.35, 0.15, 16),
+      new THREE.MeshStandardMaterial({ color: 0x78350f })
+    );
+    hip.position.y = 0.45;
+    this.dummyGroup.add(hip);
 
     // Spring Spine Assembly
     const springPivot = new THREE.Group();
-    springPivot.position.set(0, 0.25, 0);
+    springPivot.position.set(0, 0.52, 0);
     this.dummyGroup.add(springPivot);
     this.dummySpring = springPivot;
 
@@ -691,7 +741,8 @@ export class RageRoomEngine {
     this.scene.add(this.camera);
 
     this.weaponMeshGroup = new THREE.Group();
-    this.weaponMeshGroup.position.set(0.48, -0.38, -0.75); // Bottom right of screen
+    this.weaponMeshGroup.position.set(0.36, -0.32, -0.58);
+    this.weaponMeshGroup.scale.set(0.52, 0.52, 0.52);
     this.viewModel.add(this.weaponMeshGroup);
 
     this.updateWeaponViewModelMesh();
@@ -756,7 +807,7 @@ export class RageRoomEngine {
       group.add(shaft);
 
       const head = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.2, 0.2, 0.45, 16),
+        new THREE.CylinderGeometry(0.12, 0.12, 0.28, 16),
         new THREE.MeshStandardMaterial({ color: 0xf97316, roughness: 0.6 })
       );
       head.rotation.z = Math.PI / 2;
@@ -773,7 +824,7 @@ export class RageRoomEngine {
       group.add(shaft);
 
       const head = new THREE.Mesh(
-        new THREE.BoxGeometry(0.4, 0.26, 0.26),
+        new THREE.BoxGeometry(0.22, 0.14, 0.14),
         new THREE.MeshStandardMaterial({
           color: 0x06b6d4,
           emissive: 0x0891b2,
@@ -885,9 +936,9 @@ export class RageRoomEngine {
   }
 
   checkMeleeHit(weapon) {
-    // Vector from player towards dummy
-    const dx = 0 - this.player.x;
-    const dz = 0 - this.player.z;
+    // Vector from player towards dynamic fleeing dummy
+    const dx = this.dummy.x - this.player.x;
+    const dz = this.dummy.z - this.player.z;
     const distToDummy = Math.hypot(dx, dz);
 
     // Player forward direction
@@ -895,7 +946,7 @@ export class RageRoomEngine {
     const forwardZ = -Math.cos(this.player.yaw);
     const dot = (dx * forwardX + dz * forwardZ) / (distToDummy || 1);
 
-    // If facing dummy within reach (approx 3.2m)
+    // If facing dummy within reach (approx 3.4m)
     if (distToDummy < 3.5 && dot > 0.45) {
       this.hitDummy(weapon, { x: forwardX, z: forwardZ });
     } else {
@@ -961,6 +1012,10 @@ export class RageRoomEngine {
     this.dummyVelZ += dir.z * impulse;
     this.dummyHitFlash = 0.2;
 
+    // Trigger Scared Fleeing & Running Chase!
+    this.dummy.isFleeing = true;
+    this.dummy.fleeTimer = 4.2;
+
     // Cartoon facial reaction
     if (this.combo >= 8) {
       this.updateDummyFace("dizzy");
@@ -968,7 +1023,7 @@ export class RageRoomEngine {
       this.updateDummyFace("oof");
       setTimeout(() => {
         if (this.dummyExpression === "oof") this.updateDummyFace("happy");
-      }, 700);
+      }, 900);
     }
 
     // Flail arms
@@ -980,13 +1035,21 @@ export class RageRoomEngine {
     // Screenshake
     this.screenshake = Math.min(0.35, weapon.power * 0.08);
 
-    // Comic Floating Text
+    // Comic Floating Text (Hit + Panic Phrase)
     const comicPhrases = ["BONK!", "WHAM!", "POW!", "OOF!", "SMACK!", "STRESS DRAINED!", "KABOOM!"];
     const phrase = comicPhrases[Math.floor(Math.random() * comicPhrases.length)];
-    this.spawnComicText(`${phrase} +${hitScore}`, weapon.color);
+    this.spawnComicText(`${phrase} +${hitScore}`, weapon.color, this.dummy.x, 2.3, this.dummy.z);
 
-    // Particle Sparks & Stars
-    this.spawnImpactParticles(0, 1.3, 0.4, weapon.color, 18);
+    const panicPhrases = ["AAAHHH!", "DON'T HIT ME!", "RUN AWAY!", "ZOOM!", "SCRAM!", "CATCH ME!", "CHASE ME!"];
+    const panicTxt = panicPhrases[Math.floor(Math.random() * panicPhrases.length)];
+    setTimeout(() => {
+      if (this.dummy.isFleeing) {
+        this.spawnComicText(panicTxt, "#f43f5e", this.dummy.x, 2.6, this.dummy.z);
+      }
+    }, 280);
+
+    // Particle Sparks & Stars at dummy's actual location
+    this.spawnImpactParticles(this.dummy.x, 1.3, this.dummy.z, weapon.color, 18);
 
     // Check Full Rage Frenzy
     if (this.rage >= 100) {
@@ -1161,6 +1224,27 @@ export class RageRoomEngine {
   }
 
   resetDummy() {
+    this.dummy.x = 0;
+    this.dummy.y = 0;
+    this.dummy.z = -1.2;
+    this.dummy.vx = 0;
+    this.dummy.vz = 0;
+    this.dummy.rotY = 0;
+    this.dummy.isFleeing = false;
+    this.dummy.fleeTimer = 0;
+    this.dummy.animTime = 0;
+    if (this.dummyGroup) {
+      this.dummyGroup.position.set(0, 0, -1.2);
+      this.dummyGroup.rotation.set(0, 0, 0);
+    }
+    if (this.dummyLegL && this.dummyLegR) {
+      this.dummyLegL.rotation.set(0, 0, 0);
+      this.dummyLegR.rotation.set(0, 0, 0);
+    }
+    if (this.armL && this.armR) {
+      this.armL.rotation.set(0, 0, 0);
+      this.armR.rotation.set(0, 0, 0);
+    }
     this.dummyWobbleX = 0;
     this.dummyWobbleZ = 0;
     this.dummyVelX = 0;
@@ -1362,23 +1446,102 @@ export class RageRoomEngine {
       this.weaponSwingTimer -= delta;
       const pct = Math.max(0, this.weaponSwingTimer / 0.25);
       // Recoil forward and punch/swing
-      this.weaponMeshGroup.position.z = -0.75 - Math.sin(pct * Math.PI) * 0.35;
-      this.weaponMeshGroup.position.x = 0.48 - Math.sin(pct * Math.PI) * 0.18;
-      this.weaponMeshGroup.rotation.z = Math.sin(pct * Math.PI) * 0.6;
+      this.weaponMeshGroup.position.z = -0.58 - Math.sin(pct * Math.PI) * 0.22;
+      this.weaponMeshGroup.position.x = 0.38 - Math.sin(pct * Math.PI) * 0.1;
+      this.weaponMeshGroup.rotation.z = Math.sin(pct * Math.PI) * 0.5;
 
       if (this.weaponSwingTimer <= 0) {
         this.isAttacking = false;
-        this.weaponMeshGroup.position.set(0.48, -0.38, -0.75);
+        this.weaponMeshGroup.position.set(0.38, -0.32, -0.58);
         this.weaponMeshGroup.rotation.set(0, 0, 0);
       }
     } else {
       // Gentle idle weapon breathing sway
       const t = this.clock.getElapsedTime();
-      this.weaponMeshGroup.position.y = -0.38 + Math.sin(t * 2.5) * 0.015;
-      this.weaponMeshGroup.position.x = 0.48 + Math.cos(t * 1.8) * 0.01;
+      this.weaponMeshGroup.position.y = -0.32 + Math.sin(t * 2.5) * 0.008;
+      this.weaponMeshGroup.position.x = 0.38 + Math.cos(t * 1.8) * 0.006;
     }
 
-    // 6. Dummy Spring Wobble Physics
+    // 6. Dummy Movement, Scared Fleeing AI & Wobble Physics
+    const distToPlayer = Math.hypot(this.dummy.x - this.player.x, this.dummy.z - this.player.z);
+
+    // If player approaches within 2.8m and dummy is idle, it gets startled and runs!
+    if (distToPlayer < 2.8 && !this.dummy.isFleeing) {
+      this.dummy.isFleeing = true;
+      this.dummy.fleeTimer = 3.5;
+    }
+
+    if (this.dummy.fleeTimer > 0) {
+      this.dummy.fleeTimer -= delta;
+      this.dummy.isFleeing = true;
+    } else {
+      this.dummy.isFleeing = false;
+    }
+
+    if (this.dummy.isFleeing) {
+      this.dummy.animTime += delta;
+
+      // Escape direction away from player
+      let awayX = this.dummy.x - this.player.x;
+      let awayZ = this.dummy.z - this.player.z;
+      let len = Math.hypot(awayX, awayZ) || 1;
+      let dirX = awayX / len;
+      let dirZ = awayZ / len;
+
+      // Smart Wall Avoidance & Room Circling (bounds x: ±5.8, z: ±5.8)
+      if (this.dummy.x > 4.6) dirX -= 1.8;
+      if (this.dummy.x < -4.6) dirX += 1.8;
+      if (this.dummy.z > 4.6) dirZ -= 1.8;
+      if (this.dummy.z < -4.6) dirZ += 1.8;
+
+      const steerLen = Math.hypot(dirX, dirZ) || 1;
+      dirX /= steerLen;
+      dirZ /= steerLen;
+
+      // Apply movement speed
+      this.dummy.x += dirX * this.dummy.speed * delta;
+      this.dummy.z += dirZ * this.dummy.speed * delta;
+
+      // Boundary safety clamp
+      this.dummy.x = Math.max(-5.8, Math.min(5.8, this.dummy.x));
+      this.dummy.z = Math.max(-5.8, Math.min(5.8, this.dummy.z));
+
+      // Face escape direction smoothly
+      const targetRotY = Math.atan2(dirX, dirZ);
+      this.dummy.rotY = THREE.MathUtils.lerp(this.dummy.rotY, targetRotY, 0.16);
+      this.dummyGroup.rotation.y = this.dummy.rotY;
+
+      // Animated running legs & funny hop
+      const stepRate = this.dummy.animTime * 18;
+      if (this.dummyLegL && this.dummyLegR) {
+        this.dummyLegL.rotation.x = Math.sin(stepRate) * 0.75;
+        this.dummyLegR.rotation.x = -Math.sin(stepRate) * 0.75;
+      }
+      this.dummyGroup.position.y = Math.abs(Math.sin(stepRate)) * 0.14;
+
+      // Panicking flailing arms
+      if (this.armL && this.armR) {
+        this.armL.rotation.z = -0.4 + Math.sin(this.dummy.animTime * 15) * 0.7;
+        this.armR.rotation.z = 0.4 - Math.sin(this.dummy.animTime * 15) * 0.7;
+      }
+    } else {
+      // Idle panting breathing bob when player is far away
+      this.dummy.animTime += delta;
+      const breathe = Math.sin(this.dummy.animTime * 3);
+      this.dummyGroup.position.y = 0.04 + breathe * 0.03;
+      if (this.dummyLegL && this.dummyLegR) {
+        this.dummyLegL.rotation.x = THREE.MathUtils.lerp(this.dummyLegL.rotation.x, 0, 0.1);
+        this.dummyLegR.rotation.x = THREE.MathUtils.lerp(this.dummyLegR.rotation.x, 0, 0.1);
+      }
+      if (this.armL && this.armR) {
+        this.armL.rotation.z = THREE.MathUtils.lerp(this.armL.rotation.z, 0, 0.1);
+        this.armR.rotation.z = THREE.MathUtils.lerp(this.armR.rotation.z, 0, 0.1);
+      }
+    }
+
+    this.dummyGroup.position.x = this.dummy.x;
+    this.dummyGroup.position.z = this.dummy.z;
+
     // Hooke's law spring: F = -k * x - c * v
     const springK = 38.0;
     const damping = 4.2;

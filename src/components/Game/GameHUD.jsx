@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FaVolumeMute,
   FaVolumeUp,
@@ -13,6 +13,8 @@ import {
   FaCode,
   FaGraduationCap,
   FaEnvelope,
+  FaEye,
+  FaEyeSlash,
 } from "react-icons/fa";
 import { sound } from "./soundEngine";
 
@@ -48,6 +50,17 @@ function GameHUD({
     return !sessionStorage.getItem("seen_portfolio_guide");
   });
   const [showMobileTravel, setShowMobileTravel] = useState(false);
+  const [isHudVisible, setIsHudVisible] = useState(true);
+
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "h" || e.key === "H") {
+        setIsHudVisible((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
 
   const toggleAudio = () => {
     const next = !isMuted;
@@ -93,16 +106,17 @@ function GameHUD({
   return (
     <>
       {/* Top HUD Bar */}
-      <header className="pointer-events-none fixed left-0 right-0 top-0 z-40 p-2.5 sm:p-4">
-        <div className="mx-auto flex max-w-7xl items-start justify-between gap-2 sm:gap-3">
-          
-          {/* Player Identity & RPG Resource Card */}
-          <div
-            onClick={() => setShowPortfolioGuide(true)}
-            className="pointer-events-auto flex items-center gap-3 rounded-2xl border border-gold-500/60 bg-slate-950/95 p-2.5 px-3.5 shadow-2xl backdrop-blur-md cursor-pointer hover:border-gold-400 transition group"
-            title="Click to view Sarthak's Portfolio Guide"
-          >
-            <div className="relative h-12 w-12 overflow-hidden rounded-xl border-2 border-gold-500/80 shadow group-hover:scale-105 transition">
+      {isHudVisible ? (
+        <header className="pointer-events-none fixed left-0 right-0 top-0 z-40 p-2 sm:p-3">
+          <div className="mx-auto flex max-w-7xl items-start justify-between gap-2 sm:gap-3">
+            
+            {/* Player Identity & RPG Resource Card */}
+            <div
+              onClick={() => setShowPortfolioGuide(true)}
+              className="pointer-events-auto flex items-center gap-2.5 rounded-2xl border border-gold-500/60 bg-slate-950/90 p-2 px-3 shadow-2xl backdrop-blur-md cursor-pointer hover:border-gold-400 transition group"
+              title="Click to view Sarthak's Portfolio Guide"
+            >
+              <div className="relative h-10 w-10 overflow-hidden rounded-xl border-2 border-gold-500/80 shadow group-hover:scale-105 transition">
               <img
                 src="/photo.jpeg"
                 alt="Sarthak Jain Bajaj"
@@ -306,6 +320,16 @@ function GameHUD({
               {isFullscreen ? <FaCompress size={14} /> : <FaExpand size={14} />}
             </button>
 
+            {/* Hide HUD Toggle */}
+            <button
+              onClick={() => setIsHudVisible(false)}
+              aria-label="Hide HUD"
+              className="rounded-xl border border-slate-700 bg-slate-950/85 p-2.5 text-slate-300 shadow hover:border-gold-400 hover:text-gold-300 backdrop-blur-md transition"
+              title="Hide UI for Full Panoramic 3D View [Press H]"
+            >
+              <FaEyeSlash size={14} />
+            </button>
+
             {/* Sky View Toggle */}
             <button
               onClick={onToggleSkyView}
@@ -453,7 +477,17 @@ function GameHUD({
           </button>
           </div>
         </div>
-      </header>
+        </header>
+      ) : (
+        <button
+          onClick={() => setIsHudVisible(true)}
+          className="pointer-events-auto fixed top-3 right-3 z-50 flex items-center gap-1.5 rounded-full border border-gold-500/60 bg-slate-950/90 px-3.5 py-1.5 text-xs font-bold text-gold-300 shadow-2xl backdrop-blur-md hover:scale-105 transition"
+          title="Show HUD [Press H]"
+        >
+          <FaEye size={12} />
+          <span>Show HUD [H]</span>
+        </button>
+      )}
 
       {/* 🌟 ONBOARDING WELCOME & PORTFOLIO GUIDE MODAL 🌟 */}
       {showPortfolioGuide && (

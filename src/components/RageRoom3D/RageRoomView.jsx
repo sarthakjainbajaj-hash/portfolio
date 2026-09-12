@@ -11,9 +11,10 @@ import {
   FaRedo,
   FaQuestionCircle,
   FaTimes,
-  FaPlay,
   FaGlobe,
   FaGamepad,
+  FaEye,
+  FaEyeSlash,
 } from "react-icons/fa";
 
 function RageRoomView({
@@ -27,6 +28,7 @@ function RageRoomView({
 
   const [activeWeapon, setActiveWeapon] = useState(WEAPONS[0]);
   const [activeWeaponIndex, setActiveWeaponIndex] = useState(0);
+  const [isHudVisible, setIsHudVisible] = useState(true);
   const [stats, setStats] = useState({
     mode: "free",
     timeRemaining: 60,
@@ -67,7 +69,15 @@ function RageRoomView({
 
     engineRef.current = engine;
 
+    const handleKey = (e) => {
+      if (e.key === "h" || e.key === "H") {
+        setIsHudVisible((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+
     return () => {
+      window.removeEventListener("keydown", handleKey);
       engine.destroy();
       rageSound.stopBgm();
     };
@@ -126,7 +136,7 @@ function RageRoomView({
     }
   };
 
-  // Embedded Mini-Mode (on website home page)
+  // 1. EMBEDDED VIEW (Clean & Minimal for Homepage)
   if (isEmbedded) {
     return (
       <div className="relative w-full h-[550px] sm:h-[650px] overflow-hidden rounded-[2rem] border-2 border-rose-500/60 bg-slate-950 shadow-2xl select-none">
@@ -143,15 +153,15 @@ function RageRoomView({
           </div>
         </div>
 
-        {/* Top Embedded Bar */}
-        <div className="pointer-events-none absolute left-0 right-0 top-0 flex items-center justify-between p-3 sm:p-4 z-30">
-          <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-rose-500/50 bg-slate-950/90 px-3.5 py-1.5 text-xs text-rose-300 shadow backdrop-blur-md">
+        {/* Top Floating Mini Bar */}
+        <div className="pointer-events-none absolute left-0 right-0 top-0 flex items-center justify-between p-3 z-30">
+          <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-rose-500/50 bg-slate-950/85 px-3 py-1 text-xs text-rose-300 shadow backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
-            <span className="font-bold">RAGE ROOM 3D</span>
+            <span className="font-extrabold">RAGE ROOM 3D</span>
             <span className="text-slate-600">|</span>
             <span className="text-amber-300 font-bold">Score: {stats.score}</span>
             <span className="text-slate-600">|</span>
-            <span className="text-cyan-300 font-bold">Rage: {stats.rage}%</span>
+            <span className="text-rose-400 font-bold">Rage: {stats.rage}%</span>
           </div>
 
           <div className="pointer-events-auto flex items-center gap-2">
@@ -159,7 +169,7 @@ function RageRoomView({
               <button
                 onClick={onSwitchGame}
                 type="button"
-                className="flex items-center gap-1 rounded-full border border-gold-500/60 bg-brand-950/80 px-3 py-1.5 text-xs font-bold text-gold-300 shadow hover:bg-brand-900 transition"
+                className="flex items-center gap-1 rounded-full border border-gold-500/60 bg-brand-950/80 px-3 py-1 text-xs font-bold text-gold-300 shadow hover:bg-brand-900 transition"
                 title="Switch to Citadel 3D RPG Realm"
               >
                 <span>🏰</span>
@@ -169,7 +179,7 @@ function RageRoomView({
             <button
               onClick={toggleSound}
               type="button"
-              className="rounded-full border border-slate-700 bg-slate-950/85 p-2 text-slate-300 shadow hover:border-rose-500 hover:text-rose-300 backdrop-blur-md transition"
+              className="rounded-full border border-slate-700 bg-slate-950/85 p-1.5 text-slate-300 shadow hover:border-rose-500 hover:text-rose-300 backdrop-blur-md transition"
               title="Toggle Audio"
             >
               {isMuted ? <FaVolumeMute size={12} /> : <FaVolumeUp size={12} />}
@@ -177,7 +187,7 @@ function RageRoomView({
             <button
               onClick={onOpenFullscreen}
               type="button"
-              className="flex items-center gap-1.5 rounded-full border border-rose-500/70 bg-gradient-to-r from-rose-600 to-amber-600 px-3.5 py-1.5 text-xs font-bold text-white shadow hover:scale-105 transition"
+              className="flex items-center gap-1 rounded-full border border-rose-500/70 bg-gradient-to-r from-rose-600 to-amber-600 px-3 py-1 text-xs font-bold text-white shadow hover:scale-105 transition"
             >
               <FaExpand size={11} />
               <span>Fullscreen 3D</span>
@@ -186,19 +196,20 @@ function RageRoomView({
         </div>
 
         {/* Embedded Bottom Weapon Switcher */}
-        <div className="pointer-events-auto absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 rounded-2xl border border-rose-500/40 bg-slate-950/90 p-1.5 shadow-2xl backdrop-blur-md z-20 max-w-full overflow-x-auto">
-          {WEAPONS.slice(0, 5).map((w, idx) => (
+        <div className="pointer-events-auto absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-2xl border border-rose-500/40 bg-slate-950/90 p-1 shadow-2xl backdrop-blur-md z-20 max-w-full overflow-x-auto">
+          {WEAPONS.map((w, idx) => (
             <button
               key={w.id}
               onClick={() => handleWeaponSelect(idx)}
-              className={`flex items-center gap-1 rounded-xl px-2.5 py-1 text-xs font-bold transition ${
+              className={`flex items-center gap-1 rounded-xl px-2 py-1 text-xs font-bold transition ${
                 activeWeaponIndex === idx
                   ? "bg-rose-600 text-white shadow"
-                  : "bg-slate-900 text-slate-300 hover:bg-slate-800"
+                  : "text-slate-400 hover:bg-slate-900 hover:text-slate-200"
               }`}
+              title={w.name}
             >
               <span>{w.icon}</span>
-              <span className="hidden md:inline">{w.name}</span>
+              <span className="hidden sm:inline text-[11px]">{w.name.split(" ")[0]}</span>
             </button>
           ))}
         </div>
@@ -213,7 +224,7 @@ function RageRoomView({
     );
   }
 
-  // Fullscreen Immersive Mode
+  // 2. FULLSCREEN IMMERSIVE MODE (Clean, Minimal, Non-Intrusive)
   return (
     <div className="fixed inset-0 z-50 h-screen w-screen overflow-hidden bg-slate-950 select-none">
       {/* 3D WebGL Canvas */}
@@ -226,235 +237,215 @@ function RageRoomView({
       <div className="pointer-events-none fixed inset-0 flex items-center justify-center z-30">
         <div className="relative flex items-center justify-center">
           <div
-            className={`h-5 w-5 rounded-full border-2 transition-transform duration-100 ${
+            className={`h-4 w-4 rounded-full border-2 transition-transform duration-100 ${
               stats.combo > 0
                 ? "border-amber-400 scale-125 bg-amber-400/20"
                 : "border-rose-400/80 bg-rose-500/15"
             }`}
           />
-          <div className="absolute h-1.5 w-1.5 rounded-full bg-white shadow-lg" />
+          <div className="absolute h-1 w-1 rounded-full bg-white shadow-lg" />
         </div>
       </div>
 
-      {/* Combo Floating Badge */}
+      {/* Dynamic Hit Combo Badge (Center-Top, non-blocking) */}
       {stats.combo > 1 && (
-        <div className="pointer-events-none fixed top-24 left-1/2 -translate-x-1/2 z-30 animate-bounce">
-          <div className="flex items-center gap-2 rounded-2xl border-2 border-amber-400 bg-slate-950/95 px-5 py-2 text-sm sm:text-base font-black text-amber-300 shadow-2xl backdrop-blur-md">
-            <span className="text-xl">🔥</span>
+        <div className="pointer-events-none fixed top-12 left-1/2 -translate-x-1/2 z-30 animate-bounce">
+          <div className="flex items-center gap-1.5 rounded-full border border-amber-400/80 bg-slate-950/90 px-4 py-1 text-xs sm:text-sm font-black text-amber-300 shadow-2xl backdrop-blur-md">
+            <span>🔥</span>
             <span>{stats.combo}x COMBO!</span>
-            {stats.combo >= 10 && <span className="text-rose-400 animate-pulse">FRENZY!</span>}
+            {stats.combo >= 8 && <span className="text-rose-400 animate-pulse">FRENZY!</span>}
           </div>
         </div>
       )}
 
-      {/* Target Practice Banner */}
+      {/* Target Practice Prompt Banner */}
       {stats.targetZone && (
-        <div className="pointer-events-none fixed top-36 left-1/2 -translate-x-1/2 z-30 animate-pulse">
-          <div className="flex items-center gap-2 rounded-full border-2 border-yellow-400 bg-yellow-950/90 px-4 py-1.5 text-xs font-black text-yellow-300 shadow-xl backdrop-blur-md">
+        <div className="pointer-events-none fixed top-20 left-1/2 -translate-x-1/2 z-30 animate-pulse">
+          <div className="flex items-center gap-1.5 rounded-full border border-yellow-400/80 bg-yellow-950/85 px-3.5 py-1 text-[11px] font-black text-yellow-300 shadow-xl backdrop-blur-md">
             <span>🎯</span>
-            <span>AIM FOR: {stats.targetZone.toUpperCase()} (+250% BONUS)</span>
+            <span>CHASE & HIT: {stats.targetZone.toUpperCase()} (+250%)</span>
           </div>
         </div>
       )}
 
-      {/* TOP HEADER HUD */}
-      <header className="pointer-events-none fixed left-0 right-0 top-0 z-40 p-2.5 sm:p-4">
-        <div className="mx-auto flex max-w-7xl items-start justify-between gap-2 sm:gap-3">
-          
-          {/* Left: Game Identity & Score Badge */}
-          <div className="pointer-events-auto flex items-center gap-3 rounded-2xl border border-rose-500/60 bg-slate-950/95 p-2.5 px-4 shadow-2xl backdrop-blur-md">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-rose-600 to-amber-600 text-2xl shadow-lg">
-              🥊
-            </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="text-xs sm:text-sm font-black tracking-wide text-white font-heading">
+      {/* 🌟 HUD VISIBILITY TOGGLE (Floating Top-Right When UI Hidden) 🌟 */}
+      {!isHudVisible ? (
+        <button
+          onClick={() => setIsHudVisible(true)}
+          className="pointer-events-auto fixed top-3 right-3 z-50 flex items-center gap-1.5 rounded-full border border-rose-500/60 bg-slate-950/85 px-3 py-1.5 text-xs font-bold text-rose-300 shadow-2xl backdrop-blur-md hover:scale-105 transition"
+          title="Show HUD [Press H]"
+        >
+          <FaEye size={12} />
+          <span>Show UI [H]</span>
+        </button>
+      ) : (
+        <>
+          {/* Top Flush Neon Glowing Rage Progress Bar */}
+          <div className="pointer-events-none fixed top-0 inset-x-0 h-1 bg-slate-950 z-50">
+            <div
+              className="h-full bg-gradient-to-r from-amber-400 via-rose-500 to-red-600 transition-all duration-200 shadow-[0_0_12px_#f43f5e]"
+              style={{ width: `${stats.rage}%` }}
+            />
+          </div>
+
+          {/* ULTRA-SLEEK TOP HUD BAR */}
+          <header className="pointer-events-none fixed left-0 right-0 top-1.5 z-40 p-2 sm:px-4">
+            <div className="mx-auto flex max-w-7xl items-center justify-between gap-2">
+              
+              {/* Left: Compact Badge */}
+              <div className="pointer-events-auto flex items-center gap-2.5 rounded-xl border border-rose-500/40 bg-slate-950/85 px-3 py-1 text-xs text-slate-200 shadow backdrop-blur-md">
+                <span className="text-base">🥊</span>
+                <span className="font-extrabold text-white font-heading tracking-wide">
                   RAGE ROOM 3D
                 </span>
-                <span className="rounded-full border border-rose-500/60 bg-rose-500/20 px-2 py-0.5 text-[9px] font-bold uppercase text-rose-300">
-                  {stats.mode}
-                </span>
-              </div>
-              <div className="flex items-center gap-3 text-xs mt-0.5 font-bold">
-                <span className="text-amber-300">Score: {stats.score}</span>
-                <span className="text-slate-600">•</span>
-                <span className="text-emerald-400">Hits: {stats.hits}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Center: Large Dynamic Rage Meter */}
-          <div className="pointer-events-auto hidden md:flex flex-col items-center gap-1 rounded-2xl border border-rose-500/50 bg-slate-950/90 px-6 py-2 shadow-2xl backdrop-blur-md min-w-[280px]">
-            <div className="flex items-center justify-between w-full text-xs font-black">
-              <span className="text-rose-400 flex items-center gap-1">
-                <span>⚡</span>
-                <span>RAGE METER</span>
-              </span>
-              <span className={`text-xs ${stats.rage >= 90 ? "text-rose-400 animate-ping" : "text-amber-300"}`}>
-                {stats.rage}% {stats.rage >= 100 && "MAX FRENZY!"}
-              </span>
-            </div>
-            {/* Progress Bar */}
-            <div className="relative h-3 w-full overflow-hidden rounded-full border border-rose-800 bg-slate-900">
-              <div
-                className="h-full bg-gradient-to-r from-amber-500 via-rose-500 to-red-600 transition-all duration-200"
-                style={{ width: `${stats.rage}%` }}
-              />
-            </div>
-            {/* Timed Mode Remaining Countdown */}
-            {stats.mode === "timed" && (
-              <span className="text-[11px] font-black text-rose-400 mt-0.5">
-                ⏱️ Time Left: {stats.timeRemaining}s
-              </span>
-            )}
-          </div>
-
-          {/* Right: Actions & Switchers */}
-          <div className="pointer-events-auto flex items-center gap-1.5 sm:gap-2">
-            {/* Reset Dummy */}
-            <button
-              onClick={handleResetDummy}
-              className="flex items-center gap-1 rounded-xl border border-slate-700 bg-slate-950/85 px-3 py-2 text-xs font-bold text-slate-300 shadow hover:border-amber-500 hover:text-amber-300 backdrop-blur-md transition"
-              title="Reset Dummy and Props [R]"
-            >
-              <FaRedo size={12} />
-              <span className="hidden lg:inline">Reset</span>
-            </button>
-
-            {/* Instructions Help */}
-            <button
-              onClick={() => setShowInstructions(true)}
-              className="rounded-xl border border-rose-500/60 bg-slate-950/85 p-2.5 text-rose-300 shadow hover:scale-105 backdrop-blur-md transition"
-              title="How to Play"
-            >
-              <FaQuestionCircle size={15} />
-            </button>
-
-            {/* Lo-fi / Arcade Synth BGM Toggle */}
-            <button
-              onClick={toggleBgm}
-              className={`rounded-xl border p-2.5 shadow backdrop-blur-md transition ${
-                isBgmOn
-                  ? "border-emerald-500 bg-emerald-950/70 text-emerald-300"
-                  : "border-slate-700 bg-slate-950/85 text-slate-400 hover:border-slate-500"
-              }`}
-              title="Toggle Arcade Synth Music"
-            >
-              <FaMusic size={13} />
-            </button>
-
-            {/* Sound FX Audio Toggle */}
-            <button
-              onClick={toggleSound}
-              className="rounded-xl border border-slate-700 bg-slate-950/85 p-2.5 text-slate-300 shadow hover:border-rose-500 hover:text-rose-300 backdrop-blur-md transition"
-              title="Toggle Sound Effects"
-            >
-              {isMuted ? <FaVolumeMute size={14} /> : <FaVolumeUp size={14} />}
-            </button>
-
-            {/* Fullscreen */}
-            <button
-              onClick={toggleFullscreen}
-              className="hidden sm:block rounded-xl border border-slate-700 bg-slate-950/85 p-2.5 text-slate-300 shadow hover:border-rose-500 hover:text-rose-300 backdrop-blur-md transition"
-              title="Toggle Fullscreen"
-            >
-              {isFullscreen ? <FaCompress size={14} /> : <FaExpand size={14} />}
-            </button>
-
-            {/* Switch Game Button: back to Citadel 3D RPG Realm */}
-            {onSwitchGame && (
-              <button
-                onClick={onSwitchGame}
-                type="button"
-                className="flex items-center gap-1.5 rounded-xl border border-gold-500/80 bg-gradient-to-r from-brand-700 to-gold-600 px-3.5 py-2 text-xs font-black text-white shadow-xl transition hover:scale-105"
-                title="Switch to Citadel 3D Portfolio Adventure"
-              >
-                <FaGamepad size={13} />
-                <span className="font-extrabold hidden md:inline">Citadel 3D RPG</span>
-              </button>
-            )}
-
-            {/* Switch to Classic Website */}
-            <button
-              onClick={onToggleViewMode}
-              type="button"
-              className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900/90 px-3.5 py-2 text-xs font-black text-slate-200 shadow-xl transition hover:border-slate-500 hover:text-white"
-              title="Return to traditional portfolio view"
-            >
-              <FaGlobe size={13} />
-              <span className="font-extrabold hidden sm:inline">Classic Website</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Game Mode Selector Bar (Top Sub-Bar) */}
-        <div className="pointer-events-auto mx-auto mt-2 flex max-w-xl items-center justify-center gap-1 sm:gap-2 rounded-2xl border border-rose-500/40 bg-slate-950/90 p-1.5 shadow-2xl backdrop-blur-md">
-          {[
-            { id: "free", label: "Free Rage", icon: "♾️" },
-            { id: "timed", label: "60s Blitz", icon: "⏱️" },
-            { id: "combo", label: "Combo Streak", icon: "🔥" },
-            { id: "target", label: "Target Practice", icon: "🎯" },
-            { id: "zen", label: "Zen Reset", icon: "🧘" },
-          ].map((m) => (
-            <button
-              key={m.id}
-              onClick={() => handleModeSelect(m.id)}
-              className={`flex items-center gap-1 rounded-xl px-2.5 sm:px-3 py-1 text-xs font-bold transition ${
-                stats.mode === m.id
-                  ? "bg-rose-600 text-white shadow"
-                  : "text-slate-400 hover:bg-slate-900 hover:text-slate-200"
-              }`}
-            >
-              <span>{m.icon}</span>
-              <span className="hidden sm:inline">{m.label}</span>
-            </button>
-          ))}
-        </div>
-      </header>
-
-      {/* BOTTOM WEAPON SELECTOR HOTBAR */}
-      <div className="pointer-events-auto fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-2 max-w-[95vw]">
-        {/* Controls Quick Hint */}
-        <div className="hidden md:flex items-center gap-3 rounded-full border border-slate-800 bg-slate-950/80 px-4 py-0.5 text-[11px] text-slate-400 shadow backdrop-blur-md">
-          <span>Click / Space: <strong className="text-rose-400">Strike</strong></span>
-          <span>•</span>
-          <span>Keys [1-8]: <strong className="text-amber-300">Equip</strong></span>
-          <span>•</span>
-          <span>[R]: <strong className="text-cyan-300">Reset Dummy</strong></span>
-          <span>•</span>
-          <span>WASD: <strong className="text-white">Walk</strong></span>
-        </div>
-
-        {/* 8 Equipment Cards */}
-        <div className="flex items-center gap-1.5 sm:gap-2 rounded-3xl border-2 border-rose-500/50 bg-slate-950/95 p-2 shadow-2xl backdrop-blur-xl overflow-x-auto max-w-full">
-          {WEAPONS.map((w, idx) => {
-            const isSelected = activeWeaponIndex === idx;
-            return (
-              <button
-                key={w.id}
-                onClick={() => handleWeaponSelect(idx)}
-                className={`relative flex flex-col items-center justify-center rounded-2xl p-2 sm:p-2.5 transition duration-150 min-w-[56px] sm:min-w-[72px] ${
-                  isSelected
-                    ? "border-2 border-rose-400 bg-gradient-to-b from-rose-600/60 to-rose-950/80 text-white scale-105 shadow-xl"
-                    : "border border-slate-800 bg-slate-900/80 text-slate-300 hover:border-rose-500/50 hover:bg-slate-800"
-                }`}
-                title={`${w.name}: ${w.desc} [Key ${idx + 1}]`}
-              >
-                <div className="absolute top-1 right-1.5 text-[9px] font-mono font-black text-slate-500">
-                  {idx + 1}
-                </div>
-                <span className="text-xl sm:text-2xl mt-1">{w.icon}</span>
-                <span className="text-[10px] sm:text-[11px] font-bold mt-1 truncate max-w-[62px]">
-                  {w.name.split(" ")[0]}
-                </span>
-                {isSelected && (
-                  <div className="absolute -bottom-1 h-1 w-6 rounded-full bg-rose-400 shadow-md" />
+                <span className="text-slate-600">|</span>
+                <span className="font-bold text-amber-300">Score: {stats.score}</span>
+                <span className="text-slate-600 hidden sm:inline">|</span>
+                <span className="font-bold text-rose-400 hidden sm:inline">Rage: {stats.rage}%</span>
+                {stats.mode === "timed" && (
+                  <span className="font-bold text-rose-300 ml-1">⏱️ {stats.timeRemaining}s</span>
                 )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+              </div>
+
+              {/* Center: Slim Game Mode Switcher */}
+              <div className="pointer-events-auto hidden md:flex items-center gap-1 rounded-xl border border-rose-500/30 bg-slate-950/85 p-1 text-xs shadow backdrop-blur-md">
+                {[
+                  { id: "free", label: "Free", icon: "♾️" },
+                  { id: "timed", label: "60s", icon: "⏱️" },
+                  { id: "combo", label: "Combo", icon: "🔥" },
+                  { id: "target", label: "Target", icon: "🎯" },
+                  { id: "zen", label: "Zen", icon: "🧘" },
+                ].map((m) => (
+                  <button
+                    key={m.id}
+                    onClick={() => handleModeSelect(m.id)}
+                    className={`flex items-center gap-1 rounded-lg px-2.5 py-0.5 text-[11px] font-bold transition ${
+                      stats.mode === m.id
+                        ? "bg-rose-600 text-white shadow"
+                        : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    <span>{m.icon}</span>
+                    <span>{m.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Right: Sleek Action Tools */}
+              <div className="pointer-events-auto flex items-center gap-1.5">
+                {/* Hide UI Toggle */}
+                <button
+                  onClick={() => setIsHudVisible(false)}
+                  className="rounded-lg border border-slate-700 bg-slate-950/85 p-1.5 text-slate-300 shadow hover:border-rose-400 hover:text-rose-300 backdrop-blur-md transition"
+                  title="Hide UI for full view [H]"
+                >
+                  <FaEyeSlash size={12} />
+                </button>
+
+                {/* Reset Dummy */}
+                <button
+                  onClick={handleResetDummy}
+                  className="rounded-lg border border-slate-700 bg-slate-950/85 p-1.5 text-slate-300 shadow hover:border-amber-400 hover:text-amber-300 backdrop-blur-md transition"
+                  title="Reset Dummy & Room [R]"
+                >
+                  <FaRedo size={12} />
+                </button>
+
+                {/* Lo-fi Synth Music Toggle */}
+                <button
+                  onClick={toggleBgm}
+                  className={`rounded-lg border p-1.5 shadow backdrop-blur-md transition ${
+                    isBgmOn
+                      ? "border-emerald-500 bg-emerald-950/70 text-emerald-300"
+                      : "border-slate-700 bg-slate-950/85 text-slate-400"
+                  }`}
+                  title="Arcade Music"
+                >
+                  <FaMusic size={11} />
+                </button>
+
+                {/* Audio SFX Toggle */}
+                <button
+                  onClick={toggleSound}
+                  className="rounded-lg border border-slate-700 bg-slate-950/85 p-1.5 text-slate-300 shadow hover:border-rose-400 backdrop-blur-md transition"
+                  title="Sound FX"
+                >
+                  {isMuted ? <FaVolumeMute size={12} /> : <FaVolumeUp size={12} />}
+                </button>
+
+                {/* Instructions Help */}
+                <button
+                  onClick={() => setShowInstructions(true)}
+                  className="rounded-lg border border-rose-500/50 bg-slate-950/85 p-1.5 text-rose-300 shadow hover:scale-105 backdrop-blur-md transition"
+                  title="Help & Controls"
+                >
+                  <FaQuestionCircle size={12} />
+                </button>
+
+                {/* Fullscreen */}
+                <button
+                  onClick={toggleFullscreen}
+                  className="hidden sm:block rounded-lg border border-slate-700 bg-slate-950/85 p-1.5 text-slate-300 shadow hover:border-rose-400 backdrop-blur-md transition"
+                  title="Fullscreen"
+                >
+                  {isFullscreen ? <FaCompress size={12} /> : <FaExpand size={12} />}
+                </button>
+
+                {/* Switch to Citadel 3D */}
+                {onSwitchGame && (
+                  <button
+                    onClick={onSwitchGame}
+                    type="button"
+                    className="flex items-center gap-1 rounded-xl border border-gold-500/70 bg-gradient-to-r from-brand-700 to-gold-600 px-2.5 py-1 text-xs font-black text-white shadow hover:scale-105 transition"
+                    title="Switch to Citadel 3D RPG Realm"
+                  >
+                    <FaGamepad size={11} />
+                    <span className="hidden sm:inline">Citadel 3D</span>
+                  </button>
+                )}
+
+                {/* Classic Website */}
+                <button
+                  onClick={onToggleViewMode}
+                  type="button"
+                  className="flex items-center gap-1 rounded-xl border border-slate-700 bg-slate-900/90 px-2.5 py-1 text-xs font-bold text-slate-300 shadow hover:text-white transition"
+                  title="Return to Classic Portfolio View"
+                >
+                  <FaGlobe size={11} />
+                  <span className="hidden sm:inline">Website</span>
+                </button>
+              </div>
+            </div>
+          </header>
+
+          {/* ULTRA-COMPACT BOTTOM WEAPON DOCK (Height ~38px, completely unblocks view!) */}
+          <div className="pointer-events-auto fixed bottom-2 sm:bottom-3 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1 sm:gap-1.5 rounded-2xl border border-rose-500/40 bg-slate-950/90 p-1 shadow-2xl backdrop-blur-xl">
+            {WEAPONS.map((w, idx) => {
+              const isSelected = activeWeaponIndex === idx;
+              return (
+                <button
+                  key={w.id}
+                  onClick={() => handleWeaponSelect(idx)}
+                  className={`flex items-center gap-1 rounded-xl px-2 sm:px-2.5 py-1 text-xs font-bold transition ${
+                    isSelected
+                      ? "bg-rose-600 text-white shadow-lg scale-105 border border-rose-300"
+                      : "text-slate-400 hover:bg-slate-900 hover:text-slate-200"
+                  }`}
+                  title={`${w.name}: ${w.desc} [Key ${idx + 1}]`}
+                >
+                  <span className="text-sm">{w.icon}</span>
+                  <span className="text-[10px] font-mono opacity-60">[{idx + 1}]</span>
+                  {isSelected && (
+                    <span className="hidden md:inline text-[11px] ml-0.5">
+                      {w.name.split(" ")[0]}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </>
+      )}
 
       {/* Mobile Virtual Joystick & Action Buttons */}
       <VirtualJoystick
@@ -470,7 +461,7 @@ function RageRoomView({
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <div className="flex items-center gap-2 text-lg font-black text-rose-400 font-heading">
                 <span>🥊</span>
-                <span>RAGE ROOM 3D • ARCADE RULES</span>
+                <span>RAGE ROOM 3D • HOW TO PLAY</span>
               </div>
               <button
                 onClick={() => setShowInstructions(false)}
@@ -482,7 +473,7 @@ function RageRoomView({
 
             <div className="mt-4 space-y-3 text-xs sm:text-sm text-slate-300">
               <p>
-                Release your stress and frustration in this arcade-style 3D room by hitting the funny spring dummy with 8 fictional cartoon weapons!
+                Release your stress in this arcade-style 3D room! <strong>The dummy gets scared and flees from you when hit</strong>—chase it around the room and smash it with 8 cartoon weapons!
               </p>
 
               <div className="rounded-2xl border border-rose-500/30 bg-rose-950/30 p-3 space-y-1.5 font-mono text-xs">
@@ -491,16 +482,20 @@ function RageRoomView({
                   <span>Strike / Shoot</span>
                 </div>
                 <div className="flex justify-between">
+                  <span className="text-rose-300 font-bold">WASD / Arrow Keys:</span>
+                  <span>Sprint & Chase the Dummy</span>
+                </div>
+                <div className="flex justify-between">
                   <span className="text-rose-300 font-bold">Mouse Drag:</span>
                   <span>Look around 360°</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-rose-300 font-bold">WASD / Arrow Keys:</span>
-                  <span>Walk around the room</span>
-                </div>
-                <div className="flex justify-between">
                   <span className="text-rose-300 font-bold">Number Keys [1-8]:</span>
                   <span>Quick switch equipment</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-rose-300 font-bold">[H] Key:</span>
+                  <span>Toggle UI (Full Clear View)</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-rose-300 font-bold">[R] Key:</span>
@@ -527,7 +522,7 @@ function RageRoomView({
               onClick={() => setShowInstructions(false)}
               className="mt-5 w-full rounded-xl bg-gradient-to-r from-rose-600 to-amber-600 py-2.5 text-xs font-black text-white shadow-xl hover:scale-105 transition"
             >
-              GOT IT • LET&apos;S SMASH!
+              GOT IT • CHASE & SMASH!
             </button>
           </div>
         </div>
