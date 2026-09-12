@@ -38,6 +38,8 @@ function GameHUD({
   onDash,
   onInteract,
   onFastTravel = () => {},
+  onToggleSkyView = () => {},
+  onSwitchGame = null,
 }) {
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -304,6 +306,30 @@ function GameHUD({
               {isFullscreen ? <FaCompress size={14} /> : <FaExpand size={14} />}
             </button>
 
+            {/* Sky View Toggle */}
+            <button
+              onClick={onToggleSkyView}
+              aria-label="Look at Sky"
+              className="rounded-xl border border-cyan-500/50 bg-slate-950/85 px-3 py-2 text-xs font-black text-cyan-300 shadow hover:border-cyan-400 hover:text-cyan-200 backdrop-blur-md transition flex items-center gap-1.5"
+              title="Toggle Sky View (Look up at stars & celestial moon)"
+            >
+              <span>🌌</span>
+              <span className="hidden md:inline">Sky View</span>
+            </button>
+
+            {/* Switch to Rage Room 3D */}
+            {onSwitchGame && (
+              <button
+                onClick={onSwitchGame}
+                aria-label="Switch Game"
+                className="rounded-xl border border-amber-500/60 bg-amber-950/80 px-3 py-2 text-xs font-black text-amber-200 shadow hover:bg-amber-900 hover:border-amber-400 backdrop-blur-md transition flex items-center gap-1.5"
+                title="Switch to Rage Room 3D Arcade"
+              >
+                <span>🥊</span>
+                <span className="hidden md:inline">Rage Room</span>
+              </button>
+            )}
+
             {/* Prominent Switch to Classic Website Button */}
             <button
               onClick={onToggleViewMode}
@@ -360,7 +386,12 @@ function GameHUD({
         )}
 
         {/* Bottom Ability Hotbar (Desktop & Tablet) */}
-        <div className="pointer-events-auto fixed bottom-5 left-1/2 -translate-x-1/2 hidden md:flex items-center gap-2 rounded-2xl border border-gold-500/40 bg-slate-950/90 p-2 shadow-2xl backdrop-blur-md">
+        <div className="pointer-events-auto fixed bottom-5 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-1.5 z-40">
+          <div className="flex items-center gap-2 rounded-full border border-cyan-500/40 bg-slate-950/85 px-3.5 py-0.5 text-[10px] font-bold text-cyan-300 shadow backdrop-blur-md">
+            <span>🌌</span>
+            <span>Drag mouse up to view Sky & Stars • Scroll to zoom</span>
+          </div>
+          <div className="flex items-center gap-2 rounded-2xl border border-gold-500/40 bg-slate-950/90 p-2 shadow-2xl backdrop-blur-md">
           {/* Attack */}
           <button
             onClick={onAttack}
@@ -420,6 +451,7 @@ function GameHUD({
             <span className="hidden lg:inline">Inspect</span>
             <span className="rounded bg-black/50 px-1 py-0.2 text-[9px] font-mono text-slate-400">[E]</span>
           </button>
+          </div>
         </div>
       </header>
 

@@ -107,11 +107,13 @@ export class ThreeGameEngine {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.container.appendChild(this.renderer.domElement);
 
-    // Camera follow offset & rotation
-    this.cameraOffset = new THREE.Vector3(0, 8, 15);
+    // Camera follow offset & 3D orbit rotation (supports full pitch for looking up at the sky!)
     this.cameraYaw = 0;
+    this.cameraPitch = 0.38; // Elevation angle (negative = looking up at sky, positive = looking down)
+    this.cameraDist = 15.0;  // Camera distance behind player
     this.isDragging = false;
     this.prevMouseX = 0;
+    this.prevMouseY = 0;
 
     // Advanced Player RPG Stats State
     this.player = {
@@ -179,6 +181,7 @@ export class ThreeGameEngine {
     this.handlePointerDown = this.handlePointerDown.bind(this);
     this.handlePointerMove = this.handlePointerMove.bind(this);
     this.handlePointerUp = this.handlePointerUp.bind(this);
+    this.handleWheel = this.handleWheel.bind(this);
     this.loop = this.loop.bind(this);
 
     this.buildWorld();
@@ -197,6 +200,7 @@ export class ThreeGameEngine {
     this.container.addEventListener("pointerdown", this.handlePointerDown);
     window.addEventListener("pointermove", this.handlePointerMove);
     window.addEventListener("pointerup", this.handlePointerUp);
+    this.container.addEventListener("wheel", this.handleWheel, { passive: false });
     this.container.addEventListener("contextmenu", (e) => e.preventDefault());
   }
 
@@ -209,6 +213,7 @@ export class ThreeGameEngine {
     this.container.removeEventListener("pointerdown", this.handlePointerDown);
     window.removeEventListener("pointermove", this.handlePointerMove);
     window.removeEventListener("pointerup", this.handlePointerUp);
+    this.container.removeEventListener("wheel", this.handleWheel);
     if (this.renderer && this.renderer.domElement && this.renderer.domElement.parentElement) {
       this.renderer.domElement.parentElement.removeChild(this.renderer.domElement);
     }
@@ -260,6 +265,7 @@ export class ThreeGameEngine {
     if (e.button === 0) {
       this.isDragging = true;
       this.prevMouseX = e.clientX;
+      this.prevMouseY = e.clientY;
     } else if (e.button === 2) {
       // Right-click performs spin attack
       this.spinAttack();
@@ -269,8 +275,30 @@ export class ThreeGameEngine {
   handlePointerMove(e) {
     if (this.isDragging) {
       const deltaX = e.clientX - this.prevMouseX;
+      const deltaY = e.clientY - this.prevMouseY;
       this.prevMouseX = e.clientX;
+      this.prevMouseY = e.clientY;
       this.cameraYaw -= deltaX * 0.006;
+      // Moving mouse UP tilts camera UP towards the sky; moving mouse DOWN tilts towards top-down ground view
+      this.cameraPitch = Math.max(-0.75, Math.min(1.35, this.cameraPitch + deltaY * 0.005));
+    }
+  }
+
+  handleWheel(e) {
+    e.preventDefault();
+    // Zoom in or out smoothly with mouse scroll wheel
+    this.cameraDist = Math.max(5.0, Math.min(32.0, this.cameraDist + e.deltaY * 0.015));
+  }
+
+  toggleSkyView() {
+    if (this.cameraPitch < -0.2) {
+      // Return to normal 3rd-person gameplay angle
+      this.cameraPitch = 0.38;
+      this.cameraDist = 15.0;
+    } else {
+      // Look directly up into the stars, celestial moon & sky beacons!
+      this.cameraPitch = -0.68;
+      this.cameraDist = 12.0;
     }
   }
 
@@ -306,6 +334,76 @@ export class ThreeGameEngine {
     const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.65);
     rimLight.position.set(-70, 50, -70);
     this.scene.add(rimLight);
+
+    // 3D Celestial Skybox: 2,200 Star Particles & Glowing Moon for breathtaking sky viewing
+    const starCount = 2200;
+    const starPositions = new Float32Array(starCount * 3);
+    const starColors = new Float32Array(starCount * 3);
+
+    const starPalette = [
+      new THREE.Color(0xffffff), // Pure white
+      new THREE.Color(0x93c5fd), // Ice blue
+      new THREE.Color(0xfef08a), // Soft gold
+      new THREE.Color(0xc084fc), // Soft purple
+      new THREE.Color(0x67e8f9), // Bright cyan
+    ];
+
+    for (let i = 0; i < starCount; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(Math.random() * 0.85 + 0.15); // Upper hemisphere only
+      const radius = 130 + Math.random() * 150;
+
+      const x = radius * Math.sin(phi) * Math.cos(theta);
+      const y = Math.max(30, radius * Math.cos(phi));
+      const z = radius * Math.sin(phi) * Math.sin(theta);
+
+      starPositions[i * 3] = x;
+      starPositions[i * 3 + 1] = y;
+      starPositions[i * 3 + 2] = z;
+
+      const col = starPalette[Math.floor(Math.random() * starPalette.length)];
+      starColors[i * 3] = col.r;
+      starColors[i * 3 + 1] = col.g;
+      starColors[i * 3 + 2] = col.b;
+    }
+
+    const starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
+    starGeo.setAttribute("color", new THREE.BufferAttribute(starColors, 3));
+
+    const starMat = new THREE.PointsMaterial({
+      size: 1.8,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.95,
+    });
+    const starPoints = new THREE.Points(starGeo, starMat);
+    this.scene.add(starPoints);
+
+    // Glowing Celestial Moon
+    const moonGroup = new THREE.Group();
+    moonGroup.position.set(0, 150, -170);
+
+    const moonGeo = new THREE.SphereGeometry(12, 32, 32);
+    const moonMat = new THREE.MeshBasicMaterial({ color: 0xfffbeb });
+    const moonMesh = new THREE.Mesh(moonGeo, moonMat);
+    moonGroup.add(moonMesh);
+
+    const haloGeo = new THREE.SphereGeometry(21, 32, 32);
+    const haloMat = new THREE.MeshBasicMaterial({
+      color: 0x38bdf8,
+      transparent: true,
+      opacity: 0.28,
+      side: THREE.BackSide,
+      blending: THREE.AdditiveBlending,
+    });
+    const haloMesh = new THREE.Mesh(haloGeo, haloMat);
+    moonGroup.add(haloMesh);
+
+    const moonLight = new THREE.DirectionalLight(0x93c5fd, 0.45);
+    moonLight.position.copy(moonGroup.position);
+    this.scene.add(moonLight);
+    this.scene.add(moonGroup);
 
     // Large Stone Tiled Ground (260x260)
     const floorGeo = new THREE.PlaneGeometry(WORLD_3D.size, WORLD_3D.size, 48, 48);
@@ -1826,12 +1924,34 @@ export class ThreeGameEngine {
       }
     });
 
-    // 3D Third-Person Chase Camera Tracking
-    const camTarget = new THREE.Vector3(this.player.x, 2, this.player.z);
-    const rotatedOffset = this.cameraOffset.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), this.cameraYaw);
-    const desiredCamPos = camTarget.clone().add(rotatedOffset);
+    // 3D Third-Person Chase Camera Tracking with dynamic pitch (Sky to Ground orbit)
+    const pitch = this.cameraPitch;
+    const yaw = this.cameraYaw;
+    const dist = this.cameraDist;
 
-    this.camera.position.lerp(desiredCamPos, 0.1);
+    // Horizontal and vertical distance components
+    const horizDist = dist * Math.cos(Math.max(-0.25, pitch));
+    const offsetX = Math.sin(yaw) * horizDist;
+    const offsetZ = Math.cos(yaw) * horizDist;
+    const vertDist = dist * Math.sin(pitch);
+
+    // Ensure camera stays safely above terrain (minimum 0.75 units high)
+    const camY = Math.max(0.75, this.player.y + 1.8 + vertDist);
+    const desiredCamPos = new THREE.Vector3(
+      this.player.x + offsetX,
+      camY,
+      this.player.z + offsetZ
+    );
+
+    // Dynamic Look Target: when pitch is negative (looking up), target aims high up into the celestial starry sky
+    const skyLift = pitch < 0 ? -Math.sin(pitch) * 32.0 : (1.0 - Math.sin(pitch)) * 0.5;
+    const camTarget = new THREE.Vector3(
+      this.player.x - Math.sin(yaw) * (pitch < 0 ? 10.0 : 0.0),
+      this.player.y + 1.8 + skyLift,
+      this.player.z - Math.cos(yaw) * (pitch < 0 ? 10.0 : 0.0)
+    );
+
+    this.camera.position.lerp(desiredCamPos, 0.12);
     this.camera.lookAt(camTarget);
 
     // Landmark Proximity

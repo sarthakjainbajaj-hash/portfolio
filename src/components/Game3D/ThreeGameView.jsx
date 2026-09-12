@@ -13,6 +13,7 @@ function ThreeGameView({
   houseTheme = "stark",
   isEmbedded = false,
   onOpenFullscreen,
+  onSwitchGame,
 }) {
   const containerRef = useRef(null);
   const engineRef = useRef(null);
@@ -167,6 +168,26 @@ function ThreeGameView({
 
           <div className="pointer-events-auto flex items-center gap-2">
             <button
+              onClick={() => engineRef.current?.toggleSkyView()}
+              type="button"
+              className="flex items-center gap-1 rounded-full border border-cyan-500/40 bg-slate-950/85 px-2.5 py-1.5 text-xs font-bold text-cyan-300 shadow hover:border-cyan-400 hover:text-cyan-200 backdrop-blur-md transition"
+              title="Look at Celestial Sky & Stars (Drag mouse up to tilt)"
+            >
+              <span>🌌</span>
+              <span className="hidden sm:inline">Sky View</span>
+            </button>
+            {onSwitchGame && (
+              <button
+                onClick={onSwitchGame}
+                type="button"
+                className="flex items-center gap-1 rounded-full border border-amber-500/60 bg-amber-950/70 px-2.5 py-1.5 text-xs font-bold text-amber-300 shadow hover:bg-amber-900 transition"
+                title="Switch Game: Rage Room 3D"
+              >
+                <span>🥊</span>
+                <span className="hidden sm:inline">Rage Room</span>
+              </button>
+            )}
+            <button
               onClick={toggleSound}
               type="button"
               className="rounded-full border border-slate-700 bg-slate-950/85 p-2 text-slate-300 shadow hover:border-gold-500 hover:text-gold-300 backdrop-blur-md transition"
@@ -207,7 +228,7 @@ function ThreeGameView({
 
         {/* Bottom Helper Bar */}
         <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-slate-800 bg-slate-950/85 px-4 py-1 text-[11px] text-slate-300 shadow backdrop-blur-md text-center whitespace-nowrap z-20">
-          <span className="text-red-400 font-bold">⚔️ [Space/J]</span> Slash • <span className="text-amber-400 font-bold">💥 [Q/K]</span> Whirlwind • <span className="text-orange-400 font-bold">🔥 [R/F]</span> Fireball • <span className="text-cyan-400 font-bold">💨 [Shift]</span> Dash
+          <span className="text-cyan-400 font-bold">🌌 Drag up to view Sky & Stars</span> • <span className="text-red-400 font-bold">⚔️ [Space/J]</span> Slash • <span className="text-amber-400 font-bold">💥 [Q/K]</span> Whirlwind • <span className="text-orange-400 font-bold">🔥 [R/F]</span> Fireball • <span className="text-cyan-400 font-bold">💨 [Shift]</span> Dash • <span className="text-slate-400">Scroll to Zoom</span>
         </div>
 
         {/* Mobile touch controls */}
@@ -269,6 +290,8 @@ function ThreeGameView({
         onInteract={handleAction}
         onFastTravel={handleFastTravel}
         onToggleViewMode={onToggleViewMode}
+        onToggleSkyView={() => engineRef.current?.toggleSkyView()}
+        onSwitchGame={onSwitchGame}
         houseTheme={houseTheme}
       />
 

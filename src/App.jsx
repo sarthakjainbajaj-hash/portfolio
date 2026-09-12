@@ -11,12 +11,17 @@ import Resume from "./components/Resume";
 import Skills from "./components/Skills";
 import ThreeBackground from "./components/ThreeBackground";
 import ThreeGameView from "./components/Game3D/ThreeGameView";
+import RageRoomView from "./components/RageRoom3D/RageRoomView";
+import GameSelectorModal from "./components/Game/GameSelectorModal";
 
 function App() {
   const [isDark, setIsDark] = useState(false);
   const [houseTheme, setHouseTheme] = useState("stark");
   // Start directly in Game Mode
   const [viewMode, setViewMode] = useState("game");
+  // Active 3D game: 'citadel' (RPG Realm) or 'rageroom' (Arcade Stress Buster)
+  const [activeGame, setActiveGame] = useState("citadel");
+  const [isGameSelectorOpen, setIsGameSelectorOpen] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -48,14 +53,34 @@ function App() {
     document.documentElement.dataset.house = house;
   };
 
-  // 1. FULLSCREEN IMMERSIVE RPG 3D GAME VIEW
+  // 1. FULLSCREEN IMMERSIVE 3D GAME VIEW
   if (viewMode === "game") {
     return (
-      <ThreeGameView
-        onToggleViewMode={() => setViewMode("website")}
-        houseTheme={houseTheme}
-        isFullscreen={true}
-      />
+      <>
+        {activeGame === "citadel" ? (
+          <ThreeGameView
+            onToggleViewMode={() => setViewMode("website")}
+            onSwitchGame={() => setIsGameSelectorOpen(true)}
+            houseTheme={houseTheme}
+            isFullscreen={true}
+          />
+        ) : (
+          <RageRoomView
+            onToggleViewMode={() => setViewMode("website")}
+            onSwitchGame={() => setIsGameSelectorOpen(true)}
+          />
+        )}
+
+        <GameSelectorModal
+          isOpen={isGameSelectorOpen}
+          onClose={() => setIsGameSelectorOpen(false)}
+          onSelectGame={(g) => {
+            setActiveGame(g);
+            setIsGameSelectorOpen(false);
+          }}
+          currentGame={activeGame}
+        />
+      </>
     );
   }
 
@@ -81,27 +106,115 @@ function App() {
           onPlayGame={() => setViewMode("game")}
         />
 
-        {/* Embedded Playable Game Arena Section */}
+        {/* Embedded Playable Game Arena Section with Side-by-Side Selector */}
         <section id="game-arena" className="section-wrap pt-4 pb-12">
-          <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          {/* Section Header */}
+          <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <p className="section-badge">Live Interactive Game</p>
-              <h3 className="section-title">The Citadel Adventure Realm</h3>
+              <p className="section-badge">Live Interactive 3D Games</p>
+              <h3 className="section-title">Playable 3D Arcade & Portfolio Realms</h3>
             </div>
-            <button
-              type="button"
-              onClick={() => setViewMode("game")}
-              className="inline-flex items-center gap-2 self-start sm:self-auto rounded-xl bg-gradient-to-r from-brand-600 to-gold-600 px-5 py-2.5 text-xs font-extrabold text-white shadow-lg hover:scale-105 transition"
-            >
-              <span>🎮</span> Play Fullscreen Mode
-            </button>
+            
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setIsGameSelectorOpen(true)}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-gold-500/50 bg-slate-900/90 px-4 py-2.5 text-xs font-bold text-gold-300 shadow hover:border-gold-400 transition"
+              >
+                <span>🎮</span> Choose Game
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("game")}
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-gold-600 px-5 py-2.5 text-xs font-extrabold text-white shadow-lg hover:scale-105 transition"
+              >
+                <span>🚀</span> Play Fullscreen Mode
+              </button>
+            </div>
           </div>
 
-          <ThreeGameView
-            isEmbedded={true}
-            onOpenFullscreen={() => setViewMode("game")}
-            houseTheme={houseTheme}
-          />
+          {/* Side-by-side Game Mode Cards & Direct Switcher */}
+          <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {/* Card 1: Citadel 3D RPG */}
+            <div
+              onClick={() => setActiveGame("citadel")}
+              className={`flex items-center justify-between p-4 rounded-2xl border-2 cursor-pointer transition ${
+                activeGame === "citadel"
+                  ? "border-gold-400 bg-brand-950/60 shadow-lg ring-1 ring-gold-400/40"
+                  : "border-slate-800 bg-slate-900/40 hover:border-gold-500/40 hover:bg-slate-900/70"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-3xl">🏰</span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm font-black text-white font-heading">
+                      The Citadel 3D RPG
+                    </h4>
+                    {activeGame === "citadel" && (
+                      <span className="rounded-full bg-emerald-500/20 border border-emerald-500/50 px-2 py-0.2 text-[9px] font-bold text-emerald-300">
+                        ACTIVE
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    Portfolio Realm • Combat, 3D Sky & Stars, Live SolveSphere Demo
+                  </p>
+                </div>
+              </div>
+              <span className="text-xs font-bold text-gold-400 hidden lg:inline">
+                {activeGame === "citadel" ? "● Loaded" : "Click to Switch"}
+              </span>
+            </div>
+
+            {/* Card 2: Rage Room 3D */}
+            <div
+              onClick={() => setActiveGame("rageroom")}
+              className={`flex items-center justify-between p-4 rounded-2xl border-2 cursor-pointer transition ${
+                activeGame === "rageroom"
+                  ? "border-rose-500 bg-rose-950/60 shadow-lg ring-1 ring-rose-500/40"
+                  : "border-slate-800 bg-slate-900/40 hover:border-rose-500/40 hover:bg-slate-900/70"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-3xl">🥊</span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm font-black text-white font-heading">
+                      Rage Room 3D: Stress Buster
+                    </h4>
+                    {activeGame === "rageroom" && (
+                      <span className="rounded-full bg-emerald-500/20 border border-emerald-500/50 px-2 py-0.2 text-[9px] font-bold text-emerald-300">
+                        ACTIVE
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    First-Person Stress Relief • Dummy Physics, 8 Cartoon Weapons, Combos
+                  </p>
+                </div>
+              </div>
+              <span className="text-xs font-bold text-rose-400 hidden lg:inline">
+                {activeGame === "rageroom" ? "● Loaded" : "Click to Switch"}
+              </span>
+            </div>
+          </div>
+
+          {/* Embedded Game Container */}
+          {activeGame === "citadel" ? (
+            <ThreeGameView
+              isEmbedded={true}
+              onOpenFullscreen={() => setViewMode("game")}
+              onSwitchGame={() => setActiveGame("rageroom")}
+              houseTheme={houseTheme}
+            />
+          ) : (
+            <RageRoomView
+              isEmbedded={true}
+              onOpenFullscreen={() => setViewMode("game")}
+              onSwitchGame={() => setActiveGame("citadel")}
+            />
+          )}
         </section>
 
         <About />
@@ -121,8 +234,19 @@ function App() {
         onClick={() => setViewMode("game")}
         className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full border-2 border-gold-500/80 bg-gradient-to-r from-brand-600 to-gold-600 px-5 py-3 text-xs font-extrabold text-white shadow-2xl transition duration-300 hover:scale-110 hover:shadow-gold-500/35 animate-bounce"
       >
-        <span>🎮</span> Fullscreen Game
+        <span>🎮</span> Play 3D Games
       </button>
+
+      {/* Game Selector Modal */}
+      <GameSelectorModal
+        isOpen={isGameSelectorOpen}
+        onClose={() => setIsGameSelectorOpen(false)}
+        onSelectGame={(g) => {
+          setActiveGame(g);
+          setIsGameSelectorOpen(false);
+        }}
+        currentGame={activeGame}
+      />
     </div>
   );
 }
