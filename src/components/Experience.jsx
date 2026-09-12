@@ -12,18 +12,6 @@ function Experience() {
       ],
       skills: ["React.js", "JavaScript", "Tailwind CSS", "REST APIs", "Git", "Lighthouse 95+"],
     },
-    {
-      title: "Data Analyst Intern",
-      company: "Bluestock Fintech",
-      period: "2026 • Internship",
-      icon: "📊",
-      bullets: [
-        "Processed and modeled 15,000+ daily financial market records, equity movements, and IPO metrics using Python, Pandas, and NumPy.",
-        "Automated repetitive EDA data cleansing pipelines, cutting report preparation time by 40% and saving 10+ engineering hours weekly.",
-        "Built dynamic data visualizations and structured analytics dashboards to surface high-alpha investment insights for stakeholders.",
-      ],
-      skills: ["Python", "Pandas", "NumPy", "Data Analytics", "Financial Modeling", "SQL"],
-    },
   ];
 
   return (

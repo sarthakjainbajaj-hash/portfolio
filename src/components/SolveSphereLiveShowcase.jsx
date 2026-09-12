@@ -41,7 +41,7 @@ function SolveSphereLiveShowcase() {
               FLAGSHIP PRODUCTION SYSTEM
             </span>
             <span className="rounded-full border border-gold-500/50 bg-gold-950/70 px-3 py-0.5 text-[11px] font-black tracking-wide text-gold-300">
-              🏆 SIH-26043 NATIONAL FINALIST
+              💡 SIH-26043 HACKATHON PROJECT
             </span>
           </div>
 
@@ -247,8 +247,8 @@ function SolveSphereLiveShowcase() {
           {/* Key Impact & Hackathon Metrics */}
           <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 pt-5 border-t border-slate-800 text-center">
             <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
-              <div className="text-2xl font-black text-gold-400 font-heading">Top 5%</div>
-              <p className="text-[11px] text-slate-400 mt-1">SIH National Selection</p>
+              <div className="text-2xl font-black text-gold-400 font-heading">SIH-26043</div>
+              <p className="text-[11px] text-slate-400 mt-1">Hackathon Project</p>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
               <div className="text-2xl font-black text-brand-400 font-heading">&lt; 85ms</div>

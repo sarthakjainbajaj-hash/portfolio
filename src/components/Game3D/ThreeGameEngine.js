@@ -9,7 +9,7 @@ export const WORLD_3D = {
   landmarks: {
     citadel: { x: 0, z: -10, label: "About Sarthak", icon: "👑", id: "sarthak_avatar", title: "About Sarthak", subtitle: "AI & Full-Stack Architect", color: "#f59e0b" },
     projects: { x: 0, z: -88, label: "Projects & SolveSphere", icon: "🛠️", id: "proj_solvesphere", title: "Projects Archive", subtitle: "SolveSphere SIH-26043 & Apps", color: "#ef4444" },
-    experience: { x: -88, z: -15, label: "Experience & Internships", icon: "💼", id: "bluestock_master", title: "Experience Guild", subtitle: "Bluestock & Yuga Yatra", color: "#f59e0b" },
+    experience: { x: -88, z: -15, label: "Experience & Internships", icon: "💼", id: "yuga_yatra_master", title: "Experience Guild", subtitle: "Yuga Yatra SWE Guild", color: "#f59e0b" },
     skills: { x: 88, z: -15, label: "Technical Skills", icon: "⚡", id: "skill_altar", title: "Spire of Skills", subtitle: "AI/ML, React, Python, Node", color: "#10b981" },
     education: { x: -75, z: 75, label: "Education & Resume", icon: "🎓", id: "archive_tome", title: "Grand Archive", subtitle: "MITS & IIT Roorkee", color: "#8b5cf6" },
     contact: { x: 75, z: 75, label: "Contact & Socials", icon: "📬", id: "raven_eyrie", title: "Raven Eyrie", subtitle: "Email, GitHub, LinkedIn", color: "#06b6d4" },
@@ -739,7 +739,7 @@ export class ThreeGameEngine {
     );
     warBanner.position.set(-88, 4.5, -15);
     this.scene.add(warBanner);
-    this.shrineMeshes.push({ mesh: warBanner, id: "bluestock_master", rotSpeed: 0.01 });
+    this.shrineMeshes.push({ mesh: warBanner, id: "yuga_yatra_master", rotSpeed: 0.01 });
 
     // 3. Arcane Forge (Featured Projects) - North wing at (0, -88)
     const forgePedestal = new THREE.Mesh(
@@ -815,7 +815,7 @@ export class ThreeGameEngine {
     this.createLandmarkHoloBanner("PROJECTS ARCHIVE", "SolveSphere SIH-26043 & Apps", "🛠️", "#ef4444", 0, 10.5, -88);
     this.createBeaconBeam("#ef4444", 0, -88);
 
-    this.createLandmarkHoloBanner("EXPERIENCE & INTERNSHIPS", "Bluestock & Yuga Yatra", "💼", "#f59e0b", -88, 10.5, -15);
+    this.createLandmarkHoloBanner("EXPERIENCE & INTERNSHIPS", "Yuga Yatra SWE Guild", "💼", "#f59e0b", -88, 10.5, -15);
     this.createBeaconBeam("#f59e0b", -88, -15);
 
     this.createLandmarkHoloBanner("TECHNICAL SKILLS", "AI/ML, React, Node, Python", "⚡", "#10b981", 88, 10.5, -15);

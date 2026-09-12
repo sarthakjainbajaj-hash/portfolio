@@ -12,11 +12,11 @@ export const navLinks = [
 export const projects = [
   {
     title: "SolveSphere",
-    tag: "🏆 SIH-26043 Finalist (Top 5%)",
+    tag: "💡 Smart India Hackathon Project",
     category: "AI & Crowdsourced Innovation",
     description:
-      "AI-powered collaborative platform crowdsourcing societal challenges and facilitating solution co-creation across academic institutions, student researchers, and industry leaders. Selected as a national finalist in Smart India Hackathon (SIH-26043).",
-    metrics: "100+ Crowdsourced Challenges • SIH National Finalist • Live Production on Vercel",
+      "AI-powered collaborative platform crowdsourcing societal challenges and facilitating solution co-creation across academic institutions, student researchers, and industry leaders. Engineered for the Smart India Hackathon (SIH-26043).",
+    metrics: "100+ Crowdsourced Challenges • Smart India Hackathon SIH-26043 • Live Production on Vercel",
     techStack: ["React.js", "Tailwind CSS", "Vite", "AI Integration", "FastAPI", "MongoDB"],
     liveUrl: "https://solvesphere-three.vercel.app/",
     githubUrl: "https://github.com/sarthakjainbajaj-hash/SolveSphere-SIH26043",
@@ -37,7 +37,7 @@ export const projects = [
     tag: "📊 Quantitative Fintech Engine",
     category: "Data Science & Financial Modeling",
     description:
-      "Quantitative equity screening and IPO volatility analytics engine built alongside Bluestock Fintech internship. Preprocesses market time-series, surfaces alpha trends, and renders interactive financial risk dashboards.",
+      "Quantitative equity screening and IPO volatility analytics engine. Preprocesses market time-series, surfaces alpha trends, and renders interactive financial risk dashboards.",
     metrics: "15,000+ Financial Records Analyzed • 40% Reporting Latency Cut • Automated EDA Pipelines",
     techStack: ["Python", "Pandas", "NumPy", "Flask", "React.js", "Chart.js", "SQL"],
     liveUrl: "https://github.com/sarthakjainbajaj-hash/tradepulse-analytics",

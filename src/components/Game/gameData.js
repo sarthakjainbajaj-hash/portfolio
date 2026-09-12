@@ -94,28 +94,6 @@ export const INTERACTABLES = [
 
   // War Council - Experience
   {
-    id: "bluestock_master",
-    name: "Guildmaster of Bluestock",
-    title: "Data Analyst Guild",
-    type: "npc",
-    x: 350,
-    y: 470,
-    avatar: "📊",
-    badge: "Internship 2026",
-    icon: "📈",
-    category: "experience",
-    dialogue: {
-      headline: "Data Analyst Intern — Bluestock Fintech",
-      subtitle: "Duration: 2026 • Financial Technology & Quantitative Analytics",
-      body: [
-        "Analyzed complex financial metrics and transactional datasets using Python and analytical pipelines.",
-        "Conducted forensic data validation, structured trend reporting, and statistical modeling.",
-        "Extracted actionable intelligence to enhance operational strategies and risk evaluation.",
-      ],
-      skillsUsed: ["Python", "Data Analysis", "Forensics", "Statistical Modeling"],
-    },
-  },
-  {
     id: "yuga_yatra_master",
     name: "Guildmaster of Yuga Yatra",
     title: "Software Engineering Guild",

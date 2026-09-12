@@ -572,7 +572,7 @@ function GameHUD({
                         <span className="text-[10px] text-gold-400">➔</span>
                       </div>
                       <p className="text-[11px] text-slate-400 mt-0.5">
-                        SolveSphere (Smart India Hackathon Finalist SIH-26043), Parking Lot System, Report Card Generator.
+                        SolveSphere (Smart India Hackathon SIH-26043), Parking Lot System, Report Card Generator.
                       </p>
                     </div>
                   </div>
@@ -591,7 +591,7 @@ function GameHUD({
                         <span className="text-[10px] text-gold-400">➔</span>
                       </div>
                       <p className="text-[11px] text-slate-400 mt-0.5">
-                        Data Analyst Intern at Bluestock Fintech & Web Dev Intern at Yuga Yatra (2026).
+                        Software Engineer Intern at Yuga Yatra (2026).
                       </p>
                     </div>
                   </div>

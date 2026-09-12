@@ -135,17 +135,6 @@ function Resume() {
               <div className="mt-4 space-y-4">
                 <div className="rounded-xl border border-brand-800/40 bg-slate-900/60 p-4">
                   <div className="flex flex-wrap items-baseline justify-between gap-1">
-                    <h5 className="text-base font-semibold text-slate-100">Data Analyst Intern</h5>
-                    <span className="rounded bg-brand-900/80 px-2 py-0.5 text-xs font-bold text-gold-400">2026</span>
-                  </div>
-                  <p className="text-xs font-semibold text-brand-400">Bluestock Fintech</p>
-                  <p className="mt-2 text-xs leading-relaxed text-slate-300">
-                    Worked on data analysis tasks and practical data-driven projects. Applied analytical and technical skills to real-world datasets.
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-brand-800/40 bg-slate-900/60 p-4">
-                  <div className="flex flex-wrap items-baseline justify-between gap-1">
                     <h5 className="text-base font-semibold text-slate-100">Web Development Intern</h5>
                     <span className="rounded bg-brand-900/80 px-2 py-0.5 text-xs font-bold text-gold-400">2026</span>
                   </div>

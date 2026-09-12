@@ -27,7 +27,7 @@ function Hero({ houseTheme = "stark", onPlayGame }) {
               AI & Full-Stack Software Engineer
             </h2>
             <p className="mt-5 max-w-2xl text-sm sm:text-base leading-relaxed text-slate-300">
-              National Finalist at <span className="text-gold-300 font-bold">Smart India Hackathon (SIH-26043)</span> and B.Tech AI & Data Science scholar at MITS. Building scalable full-stack web platforms, retrieval-augmented AI systems, and real-time WebGL graphics engines.
+              Creator of SolveSphere for <span className="text-gold-300 font-bold">Smart India Hackathon (SIH-26043)</span> and B.Tech AI & Data Science scholar at MITS. Building scalable full-stack web platforms, retrieval-augmented AI systems, and real-time WebGL graphics engines.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
