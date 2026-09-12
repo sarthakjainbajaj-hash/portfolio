@@ -13,6 +13,7 @@ import ThreeBackground from "./components/ThreeBackground";
 import ThreeGameView from "./components/Game3D/ThreeGameView";
 import RageRoomView from "./components/RageRoom3D/RageRoomView";
 import GameSelectorModal from "./components/Game/GameSelectorModal";
+import EngineSpecsModal from "./components/Game/EngineSpecsModal";
 
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -22,6 +23,7 @@ function App() {
   // Active 3D game: 'citadel' (RPG Realm) or 'rageroom' (Arcade Stress Buster)
   const [activeGame, setActiveGame] = useState("citadel");
   const [isGameSelectorOpen, setIsGameSelectorOpen] = useState(false);
+  const [isEngineSpecsOpen, setIsEngineSpecsOpen] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -115,7 +117,15 @@ function App() {
               <h3 className="section-title">Playable 3D Arcade & Portfolio Realms</h3>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setIsEngineSpecsOpen(true)}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-cyan-500/50 bg-cyan-950/80 px-3.5 py-2.5 text-xs font-bold text-cyan-300 shadow hover:bg-cyan-900 transition"
+                title="View WebGL Graphics Architecture & Performance Specs"
+              >
+                <span>⚙️</span> WebGL Specs
+              </button>
               <button
                 type="button"
                 onClick={() => setIsGameSelectorOpen(true)}
@@ -246,6 +256,12 @@ function App() {
           setIsGameSelectorOpen(false);
         }}
         currentGame={activeGame}
+      />
+
+      {/* Engine Specs Technical Breakdown Modal */}
+      <EngineSpecsModal
+        isOpen={isEngineSpecsOpen}
+        onClose={() => setIsEngineSpecsOpen(false)}
       />
     </div>
   );

@@ -17,6 +17,7 @@ import {
   FaEyeSlash,
 } from "react-icons/fa";
 import { sound } from "./soundEngine";
+import EngineSpecsModal from "./EngineSpecsModal";
 
 function GameHUD({
   collectedCount = 0,
@@ -51,6 +52,7 @@ function GameHUD({
   });
   const [showMobileTravel, setShowMobileTravel] = useState(false);
   const [isHudVisible, setIsHudVisible] = useState(true);
+  const [showEngineSpecs, setShowEngineSpecs] = useState(false);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -339,6 +341,17 @@ function GameHUD({
             >
               <span>🌌</span>
               <span className="hidden md:inline">Sky View</span>
+            </button>
+
+            {/* WebGL Architecture Breakdown */}
+            <button
+              onClick={() => setShowEngineSpecs(true)}
+              aria-label="Engine Specs"
+              className="rounded-xl border border-cyan-500/60 bg-cyan-950/85 px-3 py-2 text-xs font-black text-cyan-200 shadow hover:bg-cyan-900 hover:border-cyan-400 backdrop-blur-md transition flex items-center gap-1.5"
+              title="View WebGL Graphics Architecture & Performance Specs"
+            >
+              <span>⚙️</span>
+              <span className="hidden md:inline">WebGL Specs</span>
             </button>
 
             {/* Switch to Rage Room 3D */}
@@ -700,6 +713,12 @@ function GameHUD({
           </div>
         </div>
       )}
+
+      {/* Engine Specs Technical Breakdown Modal */}
+      <EngineSpecsModal
+        isOpen={showEngineSpecs}
+        onClose={() => setShowEngineSpecs(false)}
+      />
     </>
   );
 }

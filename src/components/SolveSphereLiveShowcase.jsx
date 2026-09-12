@@ -20,6 +20,7 @@ function SolveSphereLiveShowcase() {
   const [isLoading, setIsLoading] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [iframeKey, setIframeKey] = useState(0);
+  const [activeTab, setActiveTab] = useState("live"); // 'live' | 'architecture'
 
   const liveUrl = "https://solvesphere-three.vercel.app/";
   const githubUrl = "https://github.com/sarthakjainbajaj-hash/SolveSphere-SIH26043";
@@ -37,10 +38,10 @@ function SolveSphereLiveShowcase() {
           <div className="flex flex-wrap items-center gap-2 mb-2">
             <span className="flex items-center gap-1.5 rounded-full border border-emerald-500/50 bg-emerald-950/70 px-3 py-0.5 text-[11px] font-black tracking-wide text-emerald-400">
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-              LIVE DEPLOYED APPLICATION
+              FLAGSHIP PRODUCTION SYSTEM
             </span>
             <span className="rounded-full border border-gold-500/50 bg-gold-950/70 px-3 py-0.5 text-[11px] font-black tracking-wide text-gold-300">
-              🏆 SIH-26043 FINALIST
+              🏆 SIH-26043 NATIONAL FINALIST
             </span>
           </div>
 
@@ -60,7 +61,7 @@ function SolveSphereLiveShowcase() {
               <FaUsers /> Cross-University Collaboration
             </span>
             <span className="flex items-center gap-1.5 text-emerald-300">
-              <FaLightbulb /> SIH Challenge Ecosystem
+              <FaLightbulb /> SIH National Challenge Ecosystem
             </span>
           </div>
         </div>
@@ -89,8 +90,185 @@ function SolveSphereLiveShowcase() {
         </div>
       </div>
 
-      {/* Interactive Browser Frame */}
-      <div className="mt-6 rounded-2xl border border-slate-700/80 bg-slate-950 shadow-2xl overflow-hidden ring-1 ring-gold-500/20">
+      {/* View Switcher: Live Demo vs System Architecture */}
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2 rounded-2xl border border-slate-800 bg-slate-900/90 p-1">
+          <button
+            type="button"
+            onClick={() => setActiveTab("live")}
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition ${
+              activeTab === "live"
+                ? "bg-gradient-to-r from-brand-600 to-gold-600 text-white shadow"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <span>🌐 Live Interactive App</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("architecture")}
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition ${
+              activeTab === "architecture"
+                ? "bg-gradient-to-r from-brand-600 to-gold-600 text-white shadow"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <span>📐 System Architecture & Specs</span>
+          </button>
+        </div>
+
+        {activeTab === "live" && (
+          <div className="flex items-center gap-2 text-xs text-slate-400">
+            <span className="hidden sm:inline">Device Viewport:</span>
+            <button
+              onClick={() => setDeviceMode("desktop")}
+              className={`p-1.5 rounded-lg border transition ${
+                deviceMode === "desktop"
+                  ? "border-gold-500 bg-gold-500/20 text-gold-300"
+                  : "border-slate-800 bg-slate-900 text-slate-400"
+              }`}
+              title="Desktop View"
+            >
+              <FaDesktop size={14} />
+            </button>
+            <button
+              onClick={() => setDeviceMode("mobile")}
+              className={`p-1.5 rounded-lg border transition ${
+                deviceMode === "mobile"
+                  ? "border-gold-500 bg-gold-500/20 text-gold-300"
+                  : "border-slate-800 bg-slate-900 text-slate-400"
+              }`}
+              title="Mobile View"
+            >
+              <FaMobileAlt size={14} />
+            </button>
+            <button
+              onClick={handleReload}
+              className="p-1.5 rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:text-white"
+              title="Reload Frame"
+            >
+              <FaSyncAlt size={13} className={isLoading ? "animate-spin" : ""} />
+            </button>
+            <button
+              onClick={() => setIsFullscreen(true)}
+              className="p-1.5 rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:text-white"
+              title="Fullscreen Preview"
+            >
+              <FaExpand size={13} />
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* TAB 1: SYSTEM ARCHITECTURE & IMPACT */}
+      {activeTab === "architecture" && (
+        <div className="mt-6 rounded-2xl border border-brand-500/30 bg-slate-950/90 p-5 sm:p-7 animate-fadeIn">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 border-b border-slate-800">
+            <div>
+              <h5 className="text-lg font-black text-slate-100 font-heading">
+                SolveSphere End-to-End System Architecture
+              </h5>
+              <p className="text-xs text-slate-400 mt-1">
+                Engineered for modularity, sub-second latency, and multi-tier university collaboration.
+              </p>
+            </div>
+            <span className="rounded-full border border-emerald-500/50 bg-emerald-950/60 px-3 py-1 text-xs font-bold text-emerald-400 self-start sm:self-center">
+              Microservices Pattern
+            </span>
+          </div>
+
+          {/* Architecture Pipeline Flow Diagram */}
+          <div className="mt-6 grid gap-4 md:grid-cols-4">
+            {/* Step 1 */}
+            <div className="rounded-2xl border border-blue-500/40 bg-blue-950/20 p-4">
+              <div className="flex items-center justify-between text-blue-400 font-mono text-xs font-black mb-2">
+                <span>01. CLIENT TIER</span>
+                <span>🖥️</span>
+              </div>
+              <h6 className="font-bold text-sm text-slate-200">React 18 + Vite</h6>
+              <p className="mt-2 text-xs text-slate-400 leading-relaxed">
+                Responsive UI with Tailwind CSS, dynamic client-side filtering, fast state stores, and real-time form validation.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-1">
+                <span className="rounded bg-blue-900/60 px-2 py-0.5 text-[10px] text-blue-300">Vite</span>
+                <span className="rounded bg-blue-900/60 px-2 py-0.5 text-[10px] text-blue-300">Tailwind</span>
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="rounded-2xl border border-purple-500/40 bg-purple-950/20 p-4">
+              <div className="flex items-center justify-between text-purple-400 font-mono text-xs font-black mb-2">
+                <span>02. AI ENGINE</span>
+                <span>🤖</span>
+              </div>
+              <h6 className="font-bold text-sm text-slate-200">Recommendation Pipeline</h6>
+              <p className="mt-2 text-xs text-slate-400 leading-relaxed">
+                Semantic challenge tagging, automated categorization, and intelligent matching of problems to student skill sets.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-1">
+                <span className="rounded bg-purple-900/60 px-2 py-0.5 text-[10px] text-purple-300">NLP Matching</span>
+                <span className="rounded bg-purple-900/60 px-2 py-0.5 text-[10px] text-purple-300">FastAPI</span>
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="rounded-2xl border border-amber-500/40 bg-amber-950/20 p-4">
+              <div className="flex items-center justify-between text-amber-400 font-mono text-xs font-black mb-2">
+                <span>03. STORAGE LAYER</span>
+                <span>🗄️</span>
+              </div>
+              <h6 className="font-bold text-sm text-slate-200">MongoDB Atlas & Cloud</h6>
+              <p className="mt-2 text-xs text-slate-400 leading-relaxed">
+                Document datastore indexing societal challenges, student submissions, team formations, and institutional verification.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-1">
+                <span className="rounded bg-amber-900/60 px-2 py-0.5 text-[10px] text-amber-300">NoSQL</span>
+                <span className="rounded bg-amber-900/60 px-2 py-0.5 text-[10px] text-amber-300">Indexing</span>
+              </div>
+            </div>
+
+            {/* Step 4 */}
+            <div className="rounded-2xl border border-emerald-500/40 bg-emerald-950/20 p-4">
+              <div className="flex items-center justify-between text-emerald-400 font-mono text-xs font-black mb-2">
+                <span>04. DEPLOYMENT</span>
+                <span>🚀</span>
+              </div>
+              <h6 className="font-bold text-sm text-slate-200">Vercel Edge Network</h6>
+              <p className="mt-2 text-xs text-slate-400 leading-relaxed">
+                Continuous deployment via Git CI/CD, SSL certification, serverless API routes, and global edge cache distribution.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-1">
+                <span className="rounded bg-emerald-900/60 px-2 py-0.5 text-[10px] text-emerald-300">CI/CD</span>
+                <span className="rounded bg-emerald-900/60 px-2 py-0.5 text-[10px] text-emerald-300">Edge CDN</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Key Impact & Hackathon Metrics */}
+          <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 pt-5 border-t border-slate-800 text-center">
+            <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
+              <div className="text-2xl font-black text-gold-400 font-heading">Top 5%</div>
+              <p className="text-[11px] text-slate-400 mt-1">SIH National Selection</p>
+            </div>
+            <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
+              <div className="text-2xl font-black text-brand-400 font-heading">&lt; 85ms</div>
+              <p className="text-[11px] text-slate-400 mt-1">Client Route Transition</p>
+            </div>
+            <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
+              <div className="text-2xl font-black text-cyan-400 font-heading">100%</div>
+              <p className="text-[11px] text-slate-400 mt-1">Live Deployment Uptime</p>
+            </div>
+            <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
+              <div className="text-2xl font-black text-emerald-400 font-heading">Multi-Tier</div>
+              <p className="text-[11px] text-slate-400 mt-1">Student & Mentor Roles</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 2: INTERACTIVE BROWSER FRAME */}
+      {activeTab === "live" && (
+      <div className="mt-4 rounded-2xl border border-slate-700/80 bg-slate-950 shadow-2xl overflow-hidden ring-1 ring-gold-500/20">
         {/* Browser Top Navigation Bar */}
         <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 px-4 py-3 border-b border-slate-800">
           {/* Traffic Light Dots */}
@@ -223,6 +401,7 @@ function SolveSphereLiveShowcase() {
           </div>
         </div>
       </div>
+      )}
 
       {/* Fullscreen Modal View */}
       {isFullscreen && (

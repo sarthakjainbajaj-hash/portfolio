@@ -23,33 +23,34 @@ function Hero({ houseTheme = "stark", onPlayGame }) {
             <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-100 sm:text-6xl md:text-7xl font-heading">
               Sarthak Jain Bajaj
             </h1>
-            <h2 className="mt-5 text-lg font-medium text-gold-200 sm:text-2xl font-heading">
-              Web Developer | AI & Data Science Student | Embedded Systems
+            <h2 className="mt-4 text-xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gold-300 via-amber-200 to-brand-300 font-heading">
+              AI & Full-Stack Software Engineer
             </h2>
-            <p className="mt-7 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              I forge scalable web applications and real-time systems with discipline,
-              precision, and a builder's oath to clean user experience.
+            <p className="mt-5 max-w-2xl text-sm sm:text-base leading-relaxed text-slate-300">
+              National Finalist at <span className="text-gold-300 font-bold">Smart India Hackathon (SIH-26043)</span> and B.Tech AI & Data Science scholar at MITS. Building scalable full-stack web platforms, retrieval-augmented AI systems, and real-time WebGL graphics engines.
             </p>
 
-            <div className="mt-10 flex flex-wrap gap-4">
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <a
+                href="#projects"
+                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-gold-600 px-6 py-3 text-xs sm:text-sm font-black text-white shadow-premium transition duration-200 hover:scale-105"
+              >
+                <span>🚀</span> Explore Flagship SolveSphere
+              </a>
               <button
                 type="button"
                 onClick={onPlayGame}
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-gold-600 px-7 py-3 text-sm font-bold text-white shadow-premium transition duration-300 hover:-translate-y-1 hover:shadow-gold-500/30 animate-pulse"
+                className="flex items-center gap-2 rounded-xl border border-gold-500/60 bg-slate-900/90 px-6 py-3 text-xs sm:text-sm font-bold text-gold-300 shadow transition duration-200 hover:border-gold-400 hover:text-white"
               >
-                <span>🎮</span> Play Citadel Game
+                <span>🎮</span> Play 3D Citadel Realm
               </button>
               <a
-                href="#projects"
-                className="glass-card rounded-xl px-7 py-3 text-sm font-semibold text-slate-200 transition duration-300 hover:-translate-y-1 hover:bg-slate-900/60"
+                href="/resume.html"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/80 px-5 py-3 text-xs sm:text-sm font-bold text-slate-300 hover:border-slate-500 hover:text-white transition"
               >
-                Explore Projects
-              </a>
-              <a
-                href="#contact"
-                className="glass-card rounded-xl px-7 py-3 text-sm font-semibold text-gold-200 transition duration-300 hover:-translate-y-1 hover:border-gold-500 hover:text-gold-300"
-              >
-                Request the Scroll
+                <span>📄</span> Open Resume PDF
               </a>
             </div>
           </div>
