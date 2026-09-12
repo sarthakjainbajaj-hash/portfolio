@@ -42,7 +42,8 @@ export class RageRoomEngine {
       z: 3.2,
       yaw: 0,
       pitch: -0.05,
-      speed: 6.5,
+      speed: 8.8,
+      sprintSpeed: 13.5,
     };
 
     // Game Mode & Rules
@@ -141,6 +142,11 @@ export class RageRoomEngine {
     this.container.removeEventListener("pointerdown", this.handlePointerDown);
     window.removeEventListener("pointermove", this.handlePointerMove);
     window.removeEventListener("pointerup", this.handlePointerUp);
+    if (document.pointerLockElement === this.container) {
+      try {
+        document.exitPointerLock?.();
+      } catch (_) {}
+    }
     if (this.renderer && this.renderer.domElement && this.renderer.domElement.parentElement) {
       this.renderer.domElement.parentElement.removeChild(this.renderer.domElement);
     }
@@ -183,15 +189,31 @@ export class RageRoomEngine {
 
   handlePointerDown(e) {
     if (e.button === 0) {
+      if (document.pointerLockElement !== this.container) {
+        try {
+          this.container.requestPointerLock?.();
+        } catch (_) {}
+      }
       this.isDragging = true;
       this.prevMouseX = e.clientX;
       this.prevMouseY = e.clientY;
       // Strike with selected weapon
       this.attack();
+    } else if (e.button === 2) {
+      this.attack();
     }
   }
 
   handlePointerMove(e) {
+    // When pointer locked, movementX/Y give smooth 360-degree FPS mouse-look
+    if (document.pointerLockElement === this.container) {
+      const movementX = e.movementX || 0;
+      const movementY = e.movementY || 0;
+      this.player.yaw -= movementX * 0.0028;
+      this.player.pitch = Math.max(-0.65, Math.min(0.68, this.player.pitch - movementY * 0.0025));
+      return;
+    }
+
     if (this.isDragging) {
       const deltaX = e.clientX - this.prevMouseX;
       const deltaY = e.clientY - this.prevMouseY;
@@ -199,7 +221,7 @@ export class RageRoomEngine {
       this.prevMouseY = e.clientY;
 
       this.player.yaw -= deltaX * 0.004;
-      this.player.pitch = Math.max(-0.6, Math.min(0.65, this.player.pitch - deltaY * 0.0035));
+      this.player.pitch = Math.max(-0.65, Math.min(0.68, this.player.pitch - deltaY * 0.0035));
     }
   }
 
@@ -335,10 +357,11 @@ export class RageRoomEngine {
     wallE.receiveShadow = true;
     this.scene.add(wallE);
 
-    // Neon Wall Posters
-    this.createPoster("💥 UNLEASH THE FURY 💥", "SMASH STRESS • ZERO CONSEQUENCES", 0, 3.2, -roomD / 2 + 0.05, 0, "#f43f5e");
-    this.createPoster("🥊 RAGE ROOM 3D 🥊", "ARCADE IMPACT SIMULATOR", -roomW / 2 + 0.05, 3.2, 0, Math.PI / 2, "#06b6d4");
-    this.createPoster("⚡ ZERO STRESS ZONE ⚡", "TARGET PRACTICE & COMBOS", roomW / 2 - 0.05, 3.2, 0, -Math.PI / 2, "#a855f7");
+    // Neon Wall Posters with Sarthak's Real Portfolio Branding
+    this.createPoster("🚀 SOLVESPHERE AI 🚀", "SIH FINALIST • CROWDSOURCING INNOVATION", 0, 3.2, -roomD / 2 + 0.05, 0, "#06b6d4");
+    this.createPoster("⚡ TECH ARSENAL ⚡", "REACT • PYTHON • NODE.JS • THREE.JS", -roomW / 2 + 0.05, 3.2, 0, Math.PI / 2, "#f43f5e");
+    this.createPoster("🛠️ SARTHAK JAIN BAJAJ 🛠️", "AI & FULL-STACK SOFTWARE ENGINEER", roomW / 2 - 0.05, 3.2, 0, -Math.PI / 2, "#eab308");
+    this.createPoster("🥊 RAGE ROOM ARCADE 🥊", "SMASH STRESS • FORGED BY SARTHAK", 0, 3.2, roomD / 2 - 0.05, Math.PI, "#a855f7");
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
@@ -1419,8 +1442,10 @@ export class RageRoomEngine {
       const rightX = cosYaw;
       const rightZ = -sinYaw;
 
-      const dx = (rightX * nX + forwardX * -nZ) * this.player.speed * delta;
-      const dz = (rightZ * nX + forwardZ * -nZ) * this.player.speed * delta;
+      const isSprinting = Boolean(this.keys["shift"]);
+      const currentSpeed = isSprinting ? this.player.sprintSpeed : this.player.speed;
+      const dx = (rightX * nX + forwardX * -nZ) * currentSpeed * delta;
+      const dz = (rightZ * nX + forwardZ * -nZ) * currentSpeed * delta;
 
       // Room boundary collision clamping (-7m to 7m)
       this.player.x = Math.max(-6.5, Math.min(6.5, this.player.x + dx));

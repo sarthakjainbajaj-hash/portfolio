@@ -45,6 +45,7 @@ function ThreeGameView({
 
     const engine = new ThreeGameEngine(container, {
       houseTheme,
+      isEmbedded,
       onInteract: (item) => {
         setActiveDialogItem(item);
       },

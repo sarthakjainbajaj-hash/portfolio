@@ -13,33 +13,33 @@ export const projects = [
   {
     title: "SolveSphere",
     description:
-      "AI-powered collaborative platform crowdsourcing societal challenges and facilitating collaborative problem-solving across universities, students, and industry partnerships (SIH-26043).",
-    techStack: ["React.js", "Tailwind CSS", "Vite", "AI Integration"],
+      "AI-powered collaborative platform crowdsourcing societal challenges and facilitating collaborative problem-solving across universities, students, and industry partnerships. Selected as a Smart India Hackathon Finalist (SIH-26043).",
+    techStack: ["React.js", "Tailwind CSS", "Vite", "AI Integration", "FastAPI"],
     liveUrl: "https://solvesphere-three.vercel.app/",
     githubUrl: "https://github.com/sarthakjainbajaj-hash/SolveSphere-SIH26043",
   },
   {
     title: "Parking Lot Management System",
     description:
-      "Automated parking slot management system with a scalable cloud-ready deployment approach.",
-    techStack: ["React", "Flask", "Python"],
-    liveUrl: "",
-    githubUrl: "",
+      "Automated intelligent parking slot allocation and billing engine featuring real-time vehicle entry/exit tracking, slot reservation algorithms, and analytics dashboard.",
+    techStack: ["React.js", "Python", "Flask", "SQLite", "Tailwind CSS"],
+    liveUrl: "https://github.com/sarthakjainbajaj-hash/parking-lot-management",
+    githubUrl: "https://github.com/sarthakjainbajaj-hash/parking-lot-management",
   },
   {
     title: "Student Report Card Generator",
     description:
-      "Built a report card generator to create and store student records for future access.",
-    techStack: ["React", "Node.js", "MongoDB"],
-    liveUrl: "",
-    githubUrl: "",
+      "Full-stack educational analytics system to compute grading, maintain cumulative GPA, generate automated PDF report cards, and persist institutional records securely.",
+    techStack: ["React.js", "Node.js", "Express.js", "MongoDB", "Tailwind CSS"],
+    liveUrl: "https://github.com/sarthakjainbajaj-hash/student-report-generator",
+    githubUrl: "https://github.com/sarthakjainbajaj-hash/student-report-generator",
   },
   {
-    title: "Portfolio Website",
+    title: "3D Citadel & Arcade Portfolio",
     description:
-      "Modern responsive portfolio with dark mode, smooth scrolling, and reusable React components.",
-    techStack: ["React.js", "Tailwind CSS", "Vite"],
-    liveUrl: "",
+      "Gamified 3D portfolio featuring a 260x260 medieval citadel realm, first-person Rage Room arcade simulator, WebGL shaders, procedural audio synthesis, and dark/light Game of Thrones house themes.",
+    techStack: ["React.js", "Three.js", "Web Audio API", "Tailwind CSS", "Vite"],
+    liveUrl: "https://github.com/sarthakjainbajaj-hash/portfolio",
     githubUrl: "https://github.com/sarthakjainbajaj-hash/portfolio",
   },
 ];

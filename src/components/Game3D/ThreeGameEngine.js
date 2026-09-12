@@ -74,6 +74,7 @@ export const INITIAL_MONSTERS = [
 export class ThreeGameEngine {
   constructor(container, options = {}) {
     this.container = container;
+    this.options = options;
     this.houseTheme = options.houseTheme || "stark";
     this.onInteract = options.onInteract || (() => {});
     this.onMonsterKill = options.onMonsterKill || (() => {});
@@ -266,6 +267,9 @@ export class ThreeGameEngine {
       this.isDragging = true;
       this.prevMouseX = e.clientX;
       this.prevMouseY = e.clientY;
+      this.pointerDownX = e.clientX;
+      this.pointerDownY = e.clientY;
+      this.dragDist = 0;
     } else if (e.button === 2) {
       // Right-click performs spin attack
       this.spinAttack();
@@ -278,6 +282,7 @@ export class ThreeGameEngine {
       const deltaY = e.clientY - this.prevMouseY;
       this.prevMouseX = e.clientX;
       this.prevMouseY = e.clientY;
+      this.dragDist += Math.hypot(deltaX, deltaY);
       this.cameraYaw -= deltaX * 0.006;
       // Moving mouse UP tilts camera UP towards the sky; moving mouse DOWN tilts towards top-down ground view
       this.cameraPitch = Math.max(-0.75, Math.min(1.35, this.cameraPitch + deltaY * 0.005));
@@ -285,6 +290,14 @@ export class ThreeGameEngine {
   }
 
   handleWheel(e) {
+    if (this.options && this.options.isEmbedded) {
+      // In embedded website view, do not trap page scroll unless Ctrl or Meta is held
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        this.cameraDist = Math.max(5.0, Math.min(32.0, this.cameraDist + e.deltaY * 0.015));
+      }
+      return;
+    }
     e.preventDefault();
     // Zoom in or out smoothly with mouse scroll wheel
     this.cameraDist = Math.max(5.0, Math.min(32.0, this.cameraDist + e.deltaY * 0.015));
@@ -302,7 +315,13 @@ export class ThreeGameEngine {
     }
   }
 
-  handlePointerUp() {
+  handlePointerUp(e) {
+    if (e.button === 0) {
+      // If user clicked without dragging (drag distance < 7px), trigger primary weapon attack!
+      if (this.dragDist < 7) {
+        this.attack();
+      }
+    }
     this.isDragging = false;
   }
 
@@ -647,7 +666,7 @@ export class ThreeGameEngine {
     });
     const sprite = new THREE.Sprite(spriteMat);
     sprite.position.set(x, y, z);
-    sprite.scale.set(13.5, 3.7, 1);
+    sprite.scale.set(17.5, 4.8, 1);
     this.scene.add(sprite);
 
     this.landmarkBanners.push({
@@ -1455,11 +1474,9 @@ export class ThreeGameEngine {
     if (!this.activeInteractable) return;
 
     if (this.activeInteractable.id === "skill_altar" && !this.skillsUnlocked) {
-      sound.playClose();
       if (this.onLockedNotice) {
-        this.onLockedNotice("⚔️ Slay the 2 Elite Altar Guardians to unlock Sarthak's Technical Skills!");
+        this.onLockedNotice("💡 Bonus Quest: Slay the 2 Elite Guardians outside to earn +50 EXP & Gold!");
       }
-      return;
     }
 
     sound.playInteract();
@@ -1971,6 +1988,16 @@ export class ThreeGameEngine {
       this.prevActiveInteractable = this.activeInteractable;
       this.onPromptChange(this.activeInteractable);
     }
+
+    // Landmark Hologram Banners & Beacons Animation
+    const bannerTime = this.clock.getElapsedTime();
+    this.landmarkBanners.forEach((b) => {
+      b.sprite.position.y = b.baseY + Math.sin(bannerTime * b.speed) * 0.45;
+    });
+    this.groundRings.forEach((r) => {
+      const s = 1.0 + Math.sin(bannerTime * 2.5) * 0.14;
+      r.ring.scale.set(s, s, s);
+    });
 
     // Stats Broadcast (HP, Mana, Exp, Level, Gold, Boss)
     this.statsTimer += delta;
